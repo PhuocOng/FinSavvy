@@ -1,0 +1,1 @@
+// Main pages (Dashboard, Login, Register, GPTCoach)
