@@ -1,12 +1,24 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
+const authRouter = require('./routes/authRoutes');
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+
+// API endpoint – to quickly test server
+app.get('/', (req, res) => {
+  res.send("API Working fine");
+});
+
+app.use('/api/auth', authRouter)
 
 // Basic GET API to say Hi to friends
 app.get('/api/greetings', (req, res) => {
