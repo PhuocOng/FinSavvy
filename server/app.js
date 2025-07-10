@@ -8,6 +8,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Register analytics API routes under /api/analytics
+// All routes inside analyticsRoutes will be prefixed with /api/analytics
+const analyticsRoutes = require('./routes/analytics');
+app.use('/api/analytics', analyticsRoutes);
+
 // Basic GET API to say Hi to friends
 app.get('/api/greetings', (req, res) => {
   const friends = ['Phuong', 'Tram', 'Trung', 'Quang', 'Chi'];
