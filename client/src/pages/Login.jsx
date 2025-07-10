@@ -1,72 +1,59 @@
-// import React, { useContext, useEffect, useState } from 'react'
-// import { ShopContext } from '../context/ShopContext';
-// import axios from 'axios';
-// import { toast } from 'react-toastify';
+import React, { useState } from 'react'
+import { assets } from '../assets/assets'; 
+import { useNavigate } from 'react-router-dom';
 
-// const Login = () => {
-//   const [currentState, setCurrentState] = useState('Login');
-//   const { token, setToken, navigate, backendUrl } = useContext(ShopContext)
-//   const [name, setName] = useState('')
-//   const [password, setPassword] = useState('')
-//   const [email, setEmail] = useState('')
+const Login = () => {
+  const [state, setState] = useState('Sign Up')
+  const[name, setName] = useState('')
+  const[email, setEmail] = useState('')
+  const[password, setPassword] = useState('')
+  const navigate = useNavigate();
 
-//   const onSubmitHandler = async (event) => {
-//     event.preventDefault();
-//     try {
-//       if(currentState === 'Signup') {
-//         const response = await axios.post(backendUrl + '/api/user/register', {name, email, password})
-//         if(response.data.success) {
-//           setToken(response.data.token)
-//           localStorage.setItem('token', response.data.token)
+  return (
+    <div className='flex items-center justify-center min-h-screen px-6 sm:px-0'>
 
-//         } else {
-//           toast.error(response.data.message)
-//         }
+      <div className='bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-sm'>
+        
+        <h2 className='text-3xl font-semibold text-center mb-3'>{state === 'Sign Up' ? 'Create Account' : 'Login'}</h2>
+        <p className='text-center text-sm mb-6'>{state === 'Sign Up' ? 'Create your Account' : 'Login to your account'}</p>
 
-//       } else {
-//         const response = await axios.post(backendUrl + '/api/user/login', {email, password})
-//         if(response.data.success) {
-//           setToken(response.data.token)
-//           localStorage.setItem('token', response.data.token)
-//         } else {
-//           toast.error(response.data.message)
-//         }
+        <form>
+          {state === 'Sign Up' && (
+            <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+              <img src={assets.person_icon} />
+              <input onChange={e => setName(e.target.value)} value={name} className='bg-transparent outline-none' type="text" placeholder='Full Name' required />
+            </div>
+          )}  
 
-//       }
+          <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+            <img src={assets.mail_icon} />
+            <input onChange={e => setEmail(e.target.value)} value={email} className='bg-transparent outline-none' type="email" placeholder='Email' required />
+          </div>
 
-//     } catch (error) {
-//       console.log(error);
-//       toast.error(error.message)
+          <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
+            <img src={assets.lock_icon} />
+            <input onChange={e => setPassword(e.target.value)} value={password} className='bg-transparent outline-none' type="password" placeholder='Password' required />
+          </div>
+
+          <p onClick={() => navigate('/')} className='mb-4 cursor-pointer'>Forgot password?</p>
+
+          <button className='w-full px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900'>{state}</button>
+        </form>
+
+        {state === 'Sign Up' ? (
+          <p className='text-gray-400 text-center text-xs mt-4'>Already have an account? {''}
+            <span onClick={() => setState('Login')} className='text-blue-400 cursor-pointer  underline'>Login here</span>
+          </p>
+        ) : (
+          <p className='text-gray-400 text-center text-xs mt-4'>Don't have an account? {''}
+            <span onClick={() => setState('Sign Up')} className='text-blue-400 cursor-pointer  underline'>Sign up</span>
+          </p>
+        )}
+        
+      </div>
       
-//     }
-//   }
+    </div>
+  )
+}
 
-//   useEffect(() => {
-//     if(token) {
-//       navigate('/')
-//     }
-//   }, [token])
-
-//   return (
-//     <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'>
-//       <div className='inline-flex items-center gap-2 mb-2 mt-10'>
-//         <p className='prata-regular text-3xl'>{currentState}</p>
-//         <hr className='border-none h-[1.5px] w-8 bg-gray-800' />
-//       </div>
-//       {currentState === 'Login' ? '' : <input onChange={(e) => setName(e.target.value)} value={name} type="text" className='w-full px-3 py-2 border border-gray-800' placeholder='Full name' required />}
-//       <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" className='w-full px-3 py-2 border border-gray-800' placeholder='Email' required />
-//       <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className='w-full px-3 py-2 border border-gray-800' placeholder='Password' required />
-//       <div className='w-full flex justify-between text-sm mt-[-8px]'>
-//         <p className='cursor-pointer'>Forgot password?</p>
-//         {
-//           currentState === 'Login' 
-//           ? <p onClick={() => setCurrentState('Signup')} className='cursor-pointer'>Create a new account</p> 
-//           : <p onClick={() => setCurrentState('Login')} className='cursor-pointer'>Login</p>
-//         }
-//       </div>
-//       <button className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login' ? 'Login' : 'Signup'}</button>
-//     </form>
-//   )
-// }
-
-// export default Login
+export default Login
