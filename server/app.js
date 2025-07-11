@@ -13,6 +13,9 @@ app.use(express.urlencoded({ extended: true }));
 const analyticsRouter = require('./routes/analytics');
 app.use('/api/analytics', analyticsRouter);
 
+const transactionRoutes = require('./routes/transactionRoutes');
+app.use('/api/transactions', transactionRoutes);
+
 // Basic GET API to say Hi to friends
 app.get('/api/greetings', (req, res) => {
   const friends = ['Phuong', 'Tram', 'Trung', 'Quang', 'Chi'];
