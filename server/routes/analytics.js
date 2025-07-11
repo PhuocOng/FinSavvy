@@ -1,17 +1,10 @@
 const express = require('express');
-const router = express.Router();
+const analyticsRouter = express.Router();
 
-router.get('/category-summary', (req, res) => {
-    res.json({
-        message: 'Category summary endpoint is under construction',
-    });
-})
+const { getCategorySummary, getMonthlySummary } = require('../controllers/analyticsController');
 
+analyticsRouter.get('/category-summary', getCategorySummary);
 
-router.get('/monthly-summary', (req, res) => {
-    res.json({
-        message: 'Monthly summary endpoint is under construction',
-    });
-})
+analyticsRouter.get('/monthly-summary', getMonthlySummary);
 
-module.exports = router;
+module.exports = analyticsRouter;
