@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
+const gptadviceRoutes = require('./routes/gpt_advice')
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.get('/api/greetings', (req, res) => {
   });
 });
 
+app.use('/api/gpt/advice', gptadviceRoutes);
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running!' });

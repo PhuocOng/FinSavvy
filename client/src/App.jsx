@@ -6,6 +6,7 @@ import Login from './pages/Login.jsx'
 import Greeting from './pages/Greeting/Greeting'
 import EmailVerify from './pages/EmailVerify';
 import ResetPassword from './pages/ResetPassword';
+import Chatbot from './pages/Chatbot.jsx'
 
 import Navbar from './components/Navbar.jsx'
 
@@ -21,7 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} /> 
           <Route path="/email-verify" element={<EmailVerify />} /> 
           <Route path="/reset-password" element={<ResetPassword />} /> 
-
+          <Route path ="/chatbot" element={<Chatbot />} />
         </Routes>
       </div>
     </div>
