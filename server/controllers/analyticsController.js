@@ -1,10 +1,13 @@
 const Transaction = require('../models/transactionModel');
 
-
 const getCategorySummary = async (req, res) => {
   try {
     const summary = await Transaction.aggregate([
-      { $match: { userId: req.user._id } }, // Filter by logged-in user
+      {
+        $match: {
+          userId: req.user._id 
+        }
+      },
       {
         $group: {
           _id: '$category',
@@ -20,21 +23,26 @@ const getCategorySummary = async (req, res) => {
       }
     ]);
 
-    res.json(summary);
+    res.status(200).json(summary);
   } catch (error) {
-    console.error('Error in category summary:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Failed to calculate category summary' });
   }
 };
 
 const getMonthlySummary = async (req, res) => {
   try {
     const summary = await Transaction.aggregate([
-      { $match: { userId: req.user._id } },
+      {
+        $match: {
+          userId: req.user._id
+        }
+      },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
-          totalAmount: { $sum: "$amount" }
+          _id: {
+            $dateToString: { format: "%Y-%m", date: "$date" }
+          },
+          totalAmount: { $sum: '$amount' }
         }
       },
       {
@@ -44,13 +52,14 @@ const getMonthlySummary = async (req, res) => {
           totalAmount: 1
         }
       },
-      { $sort: { month: 1 } }
+      {
+        $sort: { month: 1 }
+      }
     ]);
 
-    res.json(summary);
+    res.status(200).json(summary);
   } catch (error) {
-    console.error('Error in monthly summary:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Failed to calculate monthly summary' });
   }
 };
 
