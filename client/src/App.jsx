@@ -7,14 +7,19 @@ import Greeting from './pages/Greeting/Greeting'
 import EmailVerify from './pages/EmailVerify';
 import ResetPassword from './pages/ResetPassword';
 
+// Search on google (react toastify)
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+
 import Navbar from './components/Navbar.jsx'
 
 function App() {
   return (
     <div className="app">
       <Navbar />
+      
       <div className="pt-35">
-
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<Greeting />} />
           <Route path="/greetings" element={<Greeting />} />
