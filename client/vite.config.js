@@ -6,7 +6,16 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    host: true
+    host: true,
+
+    // ✅ ADD THIS PART to forward API calls to backend
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000', // your backend server
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   optimizeDeps: {
     exclude: ['crypto']
