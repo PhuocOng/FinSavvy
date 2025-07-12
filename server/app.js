@@ -8,11 +8,21 @@ const transactionRouter = require('./routes/transactionRoutes');
 
 const app = express();
 
+const allowedOrigins = ['http://localhost:3000']
+
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+// Register analytics API routes under /api/analytics
+// All routes inside analyticsRoutes will be prefixed with /api/analytics
+const analyticsRouter = require('./routes/analytics');
+app.use('/api/analytics', analyticsRouter);
+
+const transactionRoutes = require('./routes/transactionRoutes');
+app.use('/api/transactions', transactionRoutes);
+app.use(cors({origin: allowedOrigins, credentials: true})) // enable cross-origin requests (frontend localhost: 3000 tp backend 5000) with credentials (cookies, auth headers)
 
 // API endpoint – to quickly test server
 app.get('/', (req, res) => {
