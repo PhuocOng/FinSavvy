@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
+const transactionRouter = require('./routes/transactionRoutes');
 
 const app = express();
 
@@ -47,5 +48,8 @@ app.get('/api/greetings', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running!' });
 });
+
+// Transaction Routes
+app.use(transactionRouter);
 
 module.exports = app;
