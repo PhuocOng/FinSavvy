@@ -1,9 +1,11 @@
-// Define transaction route
+// Routes for Transaction Dasboard
 
 const express = require('express');
-const router = express.Router();
-const { getMockTransactions } = require('../controllers/transactionController');
+const fs = require('fs');
+const { getTransactions } = require('../controllers/transactionController');
 
-router.get('/api/transaction', getMockTransactions);
+const transactionRoute = express.Router()
 
-module.exports = router;
+transactionRoute.get('/api/transaction', getTransactions);
+
+module.exports = transactionRoute;
