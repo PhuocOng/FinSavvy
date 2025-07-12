@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
-const transactionRouter = require('./routes/transactionRoutes');
+const transactionRouters = require('./routes/transactionRoutes');
 
 const app = express();
 
@@ -50,6 +50,6 @@ app.get('/api/health', (req, res) => {
 });
 
 // Transaction Routes
-app.use(transactionRouter);
+app.use(transactionRouters);
 
 module.exports = app;
