@@ -1,1 +1,0 @@
-// Express routes: /auth, /gpt, /transactions
