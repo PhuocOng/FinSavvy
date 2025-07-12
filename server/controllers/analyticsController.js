@@ -43,13 +43,17 @@ const getMonthlySummary = (req, res) => {
     const summaryMap = {};
 
     userTransactions.forEach(tx => {
-      const monthKey = `${tx.date.getFullYear()}-${String(tx.date.getMonth() + 1).padStart(2, '0')}`;
+      if (!tx.date) return; // ⛑️ skip if no date
+
+      const dateObj = new Date(tx.date); // parse in case it's a string
+      const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
 
       if (!summaryMap[monthKey]) {
         summaryMap[monthKey] = 0;
       }
       summaryMap[monthKey] += tx.amount;
     });
+
 
     const summary = Object.keys(summaryMap)
       .sort()

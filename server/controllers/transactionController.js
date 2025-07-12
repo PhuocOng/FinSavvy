@@ -18,6 +18,7 @@ const createTransaction = (req, res) => {
     category,
     userId: req.user ? req.user._id : 'mock-user-id',
     createdAt: new Date(),
+    date: new Date(), 
   };
 
   mockTransactions.push(newTransaction);
