@@ -34,7 +34,9 @@ app.get('/api/greetings', (req, res) => {
   });
 });
 
+//GPT advice endpoint
 app.use('/api/gpt/advice', gptadviceRoutes);
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running!' });
