@@ -9,6 +9,7 @@ import ResetPassword from './pages/ResetPassword';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Navbar from './components/Navbar.jsx'
+import ChatBot from './pages/ChatBot/Chatbot.jsx'
 
 function App() {
   return (
@@ -23,8 +24,8 @@ function App() {
           <Route path="/login" element={<Login />} /> 
           <Route path="/email-verify" element={<EmailVerify />} /> 
           <Route path="/reset-password" element={<ResetPassword />} /> 
+          <Route path ="/chatbot" element={<ChatBot />} />
           <Route path="/dashboard" element={<Dashboard />} />
-
         </Routes>
       </div>
     </div>
