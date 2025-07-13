@@ -6,6 +6,7 @@ const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const analyticsRouter = require('./routes/analytics');
 const transactionRoutes = require('./routes/transactionRoutes');
+const gptadviceRoutes = require('./routes/gpt_advice');
 
 const app = express();
 
@@ -45,5 +46,6 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/gpt/advice', gptadviceRoutes);
 
 module.exports = app;
