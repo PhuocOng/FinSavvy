@@ -1,31 +1,35 @@
-// 🧠 Fake database stored in memory
-const { mockTransactions } = require('../data/mockTransactions');
+// Transaction Controllers
 
+const fs = require('fs');
+const path = require('path');
 
-// GET all transactions
 const getTransactions = (req, res) => {
-  res.status(200).json(mockTransactions);
+  const filePath = path.join(__dirname, '../mock/plaid_transaction.json');
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.error('Error reading files:', err);
+      return res.status(500).json({error: 'Could not load mock transactions'});
+    }
+
+    try {
+      const parsedData = JSON.parse(data);
+      const rawTransactions = parsedData.transactions;
+
+      const cleanedTransactions = rawTransactions.map(txn => ({
+        id: txn.transaction_id, 
+        date: txn.date,
+        name: txn.name || txn.merchant_name,
+        amount: txn.amount,
+        category: txn.personal_finance_category?.primary || "Uncategorized",
+      }));
+
+      res.json({ transactions: cleanedTransactions });
+    } catch (parseError) {
+      console.error('Error parsing JSON:', parseError);
+      res.status(500).json({error: 'Invalid JSON structure'});
+    }
+  });
 };
 
-// POST new transaction
-const createTransaction = (req, res) => {
-  const { title, amount, category } = req.body;
-
-  const newTransaction = {
-    id: mockTransactions.length + 1,
-    title,
-    amount,
-    category,
-    userId: req.user ? req.user._id : 'mock-user-id',
-    createdAt: new Date(),
-    date: new Date(), 
-  };
-
-  mockTransactions.push(newTransaction);
-  res.status(201).json(newTransaction);
-};
-
-module.exports = {
-  getTransactions,
-  createTransaction,
-};
+module.exports = { getTransactions };
