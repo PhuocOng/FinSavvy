@@ -6,6 +6,6 @@ const { getTransactions } = require('../controllers/transactionController');
 
 const transactionRoute = express.Router()
 
-transactionRoute.get('/api/transaction', getTransactions);
+transactionRoute.get('/', getTransactions);
 
 module.exports = transactionRoute;
