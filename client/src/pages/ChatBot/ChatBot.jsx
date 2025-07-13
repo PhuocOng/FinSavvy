@@ -5,6 +5,11 @@ import ChatMessage from "../../components/ChatBot/ChatMessage"
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { toast } from 'react-toastify'; 
+import axios from "axios";
+
+const backendUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 const ChatBot = () => {
     const [chatHistory, setChatHistory] = useState([]);
@@ -13,31 +18,24 @@ const ChatBot = () => {
 
     const generateBotResponse = async (history) => {
         try {
-        const updateHistory = (text, isError = false) => {
-            setChatHistory ((prev) => [...prev.filter((msg) => msg.text!== "Thinking..."), {role: "system", text, isError}]); 
+        const updateHistory = (text = false) => {
+            setChatHistory ((prev) => [...prev.filter((msg) => msg.text!== "Thinking..."), {role: "system", text}]); 
         };
 
         //Format chat history for API request
         const formattedHistory = history.map(({role,text})=>({role, content: text}));
 
-        const response = await fetch("http://localhost:5000/api/gpt/advice", {
-                method: "POST",
-                body: JSON.stringify({prompt: formattedHistory}),
-                headers : {
-                    "Content-Type": "application/json"
-                }
-            })
-        const data = await response.json();
-        if (!response.ok)
-            {
-                throw new Error(data.error.message||"Something went wrong");
-            }
+        const response = await axios.post(backendUrl+ '/api/gpt/advice', {
+                prompt: formattedHistory
+            });
 
         //Clean and update chat history with bot's response
-            const apiReponseText = data.reply;
+            const apiReponseText = response.data.reply;
             updateHistory(apiReponseText);
+            toast.success("Bot response received!");
         } catch (error){
-            updateHistory(error.message, true)
+            const message = error.response?.data?.error?.message || error.message || "Something went wrong";
+            toast.error(`Error: ${message}`);
         }
     };
     
@@ -67,7 +65,7 @@ const ChatBot = () => {
                 <div ref={chatBodyRef} className="chat-body">
                     <div className="message bot-message">
                         <ChatbotIcon />
-                        <p className="message-text">Hey there <br /> How can I help you today?
+                        <p className="message-text">Hey there! <br /> How can I help you today?
                         </p>
                     </div>
                      {/* Render the chat history dynamically*/}

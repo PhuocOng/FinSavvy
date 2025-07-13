@@ -26,7 +26,6 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} /> 
           <Route path ="/chatbot" element={<ChatBot />} />
           <Route path="/dashboard" element={<Dashboard />} />
-
         </Routes>
       </div>
     </div>
