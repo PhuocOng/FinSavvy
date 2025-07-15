@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getMonthlySummary } from '../services/analytics';
+import { getMonthlySummary } from '../../services/analytics';
 
 export default function BarChart() {
   const [data, setData] = useState([]);
@@ -12,8 +12,8 @@ export default function BarChart() {
   }, []);
 
   return (
-    <div className="p-4 shadow rounded-lg bg-white mt-8">
-      <h2 className="text-xl font-bold mb-4">Monthly Spending Overview</h2>
+    <div className="flex flex-col items-center text-center">
+      <h2 className="text-xl font-semibold mb-4">Monthly Spending Overview</h2>
 
       {Array.isArray(data) && data.length > 0 ? (
         <ResponsiveContainer width="100%" height={300}>
@@ -23,11 +23,11 @@ export default function BarChart() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="totalAmount" fill="#8884d8" name="Total Spending" />
+            <Bar dataKey="totalAmount" fill="#4f46e5" name="Total Spending" />
           </ReBarChart>
         </ResponsiveContainer>
       ) : (
-        <p>No data available.</p>
+        <p className="text-gray-500">No monthly data available.</p>
       )}
     </div>
   );
