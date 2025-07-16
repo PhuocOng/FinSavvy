@@ -1,63 +1,70 @@
+// Dashboard
 import PieChart from '../components/Dashboard/PieChart';
 import BarChart from '../components/Dashboard/BarChart';
 import TransactionTable from '../components/Dashboard/TransactionTable';
 import FilterByCategory from '../components/Dashboard/FilterByCategory';
 import FilterByDate from '../components/Dashboard/FilterByDate';
 import { useState, useEffect } from 'react';
-import { fetchTransactionsWithFilters } from '../services/transactions';
+import axios from 'axios';
 
-function Dashboard() {
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
-  const [transactions, setTransactions] = useState([]);
-  const [categories, setCategories] = useState([]);
 
+
+const Dashboard = () => {
+  const [transactions, setTransactions] = useState([]); // All transactions
+  const [filteredTransactions, setFilteredTransactions] = useState([]); // Filtered list
+  const [categoryOptions, setCategoryOptions] = useState([]); // all unique categories
+  const [categoryFilter, setCategoryFilter] = useState('');   // selected category
+  const [dateFilter, setDateFilter] = useState({ from: '', to: '' }); // Selected date range
+
+  // Fetch transactions from backend
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const filters = {
-          ...(categoryFilter && { category: categoryFilter }),
-          ...(dateFilter.from && { from: dateFilter.from }),
-          ...(dateFilter.to && { to: dateFilter.to }),
-        };
+    axios.get('/api/transaction')
+      .then(res => {
+        const txns = res.data.transactions;
+        setTransactions(txns); // save full list
+        setFilteredTransactions(txns)
+        
+        const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
+        setCategoryOptions(categories) // show all at first
+      })
+      .catch(err => console.error('Error fetching transactions:', err));
+  }, []);
 
-        const data = await fetchTransactionsWithFilters(filters);
-        setTransactions(data);
+  // Apply filters when category/date changes
+  useEffect(() => {
+    let result = [...transactions];
 
-        const uniqueCategories = [...new Set(data.map(t => t.category))];
-        setCategories(uniqueCategories);
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      }
-    };
+    // Filter by category
+    if (categoryFilter) {
+      result = result.filter(txn => txn.category === categoryFilter);
+    }
 
-    fetchData();
-  }, [categoryFilter, dateFilter]);
+    // Filter by date range
+    if (dateFilter.from && dateFilter.to) {
+      result = result.filter(txn => {
+        const txnDate = new Date(txn.date);
+        return txnDate >= new Date(dateFilter.from) && txnDate <= new Date(dateFilter.to);
+      });
+    }
+
+    setFilteredTransactions(result); // update table
+  }, [categoryFilter, dateFilter, transactions]);
 
   return (
-    <div className="p-4 pt-24 space-y-10 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold">📊 Dashboard Overview</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Transaction Dashboard</h1>
 
-      {/* 🔍 Filter Section */}
-      <div className="bg-white p-4 rounded-xl shadow-md flex flex-col md:flex-row items-start md:items-center gap-4 justify-between">
-        <div className="flex gap-4 flex-wrap items-center">
-          <FilterByCategory categories={categories} setCategoryFilter={setCategoryFilter} />
-          <FilterByDate setDateFilter={setDateFilter} />
-        </div>
-        <div className="text-sm text-gray-500">Filters apply to the transaction table only.</div>
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4 mb-4">
+        <FilterByCategory
+          setCategoryFilter = {setCategoryFilter} 
+          categories={categoryOptions}
+        />
+        <FilterByDate setDateFilter={setDateFilter} />
       </div>
 
-      {/* 📋 Transaction Table Section */}
-      <div className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
-        {transactions.length > 0 ? (
-          <TransactionTable transactions={transactions} />
-        ) : (
-          <p className="text-gray-500">No transactions found for current filters.</p>
-        )}
-      </div>
-
-      {/* 📈 Analytics Charts */}
+      {/* 4️⃣ Transaction table */}
+      <TransactionTable transactions={filteredTransactions} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-md p-6">
           <PieChart />
@@ -69,6 +76,6 @@ function Dashboard() {
       </div>
     </div>
   );
-}
+};
 
 export default Dashboard;
