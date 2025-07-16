@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   // Fetch transactions from backend
   useEffect(() => {
-    axios.get('/api/transaction')
+    axios.get('/api/transactions')
       .then(res => {
         const txns = res.data.transactions;
         setTransactions(txns); // save full list
