@@ -15,7 +15,7 @@ const Dashboard = () => {
   const [categoryFilter, setCategoryFilter] = useState('');   // selected category
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' }); // Selected date range
 
-  // 1️⃣ Fetch transactions from backend
+  // Fetch transactions from backend
   useEffect(() => {
     axios.get('/api/transaction')
       .then(res => {
@@ -29,7 +29,7 @@ const Dashboard = () => {
       .catch(err => console.error('Error fetching transactions:', err));
   }, []);
 
-  // 2️⃣ Apply filters when category/date changes
+  // Apply filters when category/date changes
   useEffect(() => {
     let result = [...transactions];
 
@@ -53,7 +53,7 @@ const Dashboard = () => {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Transaction Dashboard</h1>
 
-      {/* 3️⃣ Filters */}
+      {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-4">
         <FilterByCategory
           setCategoryFilter = {setCategoryFilter} 
