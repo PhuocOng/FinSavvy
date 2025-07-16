@@ -1,6 +1,5 @@
 // Routes for Transaction Dasboard
 
-
 const express = require('express');
 const fs = require('fs');
 const { getTransactions } = require('../controllers/transactionController');
