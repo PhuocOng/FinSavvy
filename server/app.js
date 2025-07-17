@@ -6,6 +6,7 @@ const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const gptadviceRoutes = require('./routes/gpt_advice')
 const transactionRouters = require('./routes/transactionRoutes');
+const plaidRoutes = require('./routes/plaidRoutes');
 
 const app = express();
 
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
-
+app.use('/api/plaid', plaidRoutes)
 // Basic GET API to say Hi to friends
 app.get('/api/greetings', (req, res) => {
   const friends = ['Phuong', 'Tram', 'Trung', 'Quang', 'Chi'];

@@ -2,7 +2,7 @@ const app = require('./app');
 const connectDB = require('./config/db');
 
 const USE_DB = false;
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 if (USE_DB) {
   connectDB().then(() => {
