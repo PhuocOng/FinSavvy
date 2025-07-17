@@ -1,4 +1,4 @@
-import { plaidClient  } from "../services/plaidService.js";
+const { plaidClient } = require("../services/plaidService.js");
 
 // POST /api/plaid/exchange_token
 const exchangeToken = async (req, res) => {
@@ -15,7 +15,7 @@ const exchangeToken = async (req, res) => {
 }
 
 // GET /api/plaid/transactions
-export const getTransactions = async (req, res) => {
+const getTransactions = async (req, res) => {
   const { access_token } = req.query;
 
   if (!access_token) {
@@ -41,4 +41,4 @@ export const getTransactions = async (req, res) => {
 };
 
 
-module.exports={exchangeToken, getTransactions};
+module.exports = { exchangeToken, getTransactions };

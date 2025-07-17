@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require('express');
+const {
   exchangeToken,
   getTransactions,
-} from "../controllers/plaidController.js";
+} = require("../controllers/plaidController.js");
 
 const router = express.Router();
 
 router.post("/exchange_token", exchangeToken);
 router.get("/transactions", getTransactions);
 
-export default router;
+module.exports=router;
