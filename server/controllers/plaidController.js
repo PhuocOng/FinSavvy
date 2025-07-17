@@ -39,3 +39,6 @@ export const getTransactions = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch transactions' });
   }
 };
+
+
+module.exports={exchangeToken, getTransactions};
