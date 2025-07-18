@@ -1,11 +1,12 @@
 // Dashboard
-import React, { useEffect, useState } from 'react';
+import PieChart from '../components/Dashboard/PieChart';
+import BarChart from '../components/Dashboard/BarChart';
+import TransactionTable from '../components/Dashboard/TransactionTable';
+import FilterByCategory from '../components/Dashboard/FilterByCategory';
+import FilterByDate from '../components/Dashboard/FilterByDate';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import TransactionTable from '../components/Transactions/TransactionTable';
-import FilterByCategory from '../components/Transactions/FilterByCategory';
-import FilterByDate from '../components/Transactions/FilterByDate';
-import PieChart from '../components/PieChart';
-import BarChart from '../components/BarChart';
+
 
 
 const Dashboard = () => {
@@ -17,7 +18,7 @@ const Dashboard = () => {
 
   // Fetch transactions from backend
   useEffect(() => {
-    axios.get('/api/transaction')
+    axios.get('/api/transactions')
       .then(res => {
         const txns = res.data.transactions;
         setTransactions(txns); // save full list
@@ -65,11 +66,11 @@ const Dashboard = () => {
       {/* 4️⃣ Transaction table */}
       <TransactionTable transactions={filteredTransactions} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow-md p-6">
           <PieChart />
         </div>
 
-        <div className="bg-white rounded-xl shadow p-4">
+        <div className="bg-white rounded-xl shadow-md p-6">
           <BarChart />
         </div>
       </div>
