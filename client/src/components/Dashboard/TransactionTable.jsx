@@ -1,4 +1,3 @@
-import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 
 const TransactionTable = ({ transactions }) => (
@@ -42,7 +41,7 @@ const TransactionTable = ({ transactions }) => (
               <td className={`py-3 px-4 text-right font-semibold ${
                 transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
               }`}>
-                {transaction.type === 'income' ? '+' : '-'}${transaction.amount.toFixed(2)}
+                {transaction.type === 'income' ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
               </td>
             </tr>
           ))}

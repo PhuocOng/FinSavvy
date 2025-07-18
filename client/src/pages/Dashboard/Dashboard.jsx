@@ -22,7 +22,7 @@ const Dashboard = () => {
           date: t.date,
           category: t.category,
           amount: t.amount,
-          type: t.amount >= 0 ? 'expense' : 'income',
+          type: t.amount > 0 ? 'expense' : 'income',
           description: t.name,
         }));
         setTransactions(processedTransactions);
