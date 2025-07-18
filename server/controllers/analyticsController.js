@@ -1,22 +1,26 @@
-const Transaction = require('../models/transactionModel');
-const { mockTransactions } = require('../data/mockTransactions');
+const fs = require('fs');
+const path = require('path');
 
+const getPlaidTransactions = () => {
+  const filePath = path.join(__dirname, '../mock/plaid_transaction.json');
+  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  const data = JSON.parse(fileContent);
+  return data.transactions; // Return only the transactions array
+};
 
 const getCategorySummary = (req, res) => {
   try {
-    const userId = req.user ? req.user._id : 'mock-user-id';
-
-    const userTransactions = mockTransactions.filter(
-      tx => tx.userId === userId
-    );
+    const transactions = getPlaidTransactions();
 
     const summaryMap = {};
 
-    userTransactions.forEach(tx => {
-      if (!summaryMap[tx.category]) {
-        summaryMap[tx.category] = 0;
+    transactions.forEach(tx => {
+      const category = tx.personal_finance_category?.primary || "Uncategorized";
+
+      if (!summaryMap[category]) {
+        summaryMap[category] = 0;
       }
-      summaryMap[tx.category] += tx.amount;
+      summaryMap[category] += tx.amount;
     });
 
     const summary = Object.keys(summaryMap).map(category => ({
@@ -31,21 +35,17 @@ const getCategorySummary = (req, res) => {
   }
 };
 
-
 const getMonthlySummary = (req, res) => {
   try {
-    const userId = req.user ? req.user._id : 'mock-user-id';
 
-    const userTransactions = mockTransactions.filter(
-      tx => tx.userId === userId
-    );
+    const transactions = getPlaidTransactions();
 
     const summaryMap = {};
 
-    userTransactions.forEach(tx => {
-      if (!tx.date) return; // ⛑️ skip if no date
+    transactions.forEach(tx => {
+      if (!tx.date) return;
 
-      const dateObj = new Date(tx.date); // parse in case it's a string
+      const dateObj = new Date(tx.date);
       const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
 
       if (!summaryMap[monthKey]) {
@@ -53,7 +53,6 @@ const getMonthlySummary = (req, res) => {
       }
       summaryMap[monthKey] += tx.amount;
     });
-
 
     const summary = Object.keys(summaryMap)
       .sort()
@@ -68,7 +67,6 @@ const getMonthlySummary = (req, res) => {
     res.status(500).json({ error: 'Failed to calculate monthly summary' });
   }
 };
-
 
 module.exports = {
   getCategorySummary,
