@@ -7,6 +7,7 @@ const userRouter = require('./routes/userRoutes');
 const analyticsRouter = require('./routes/analytics');
 const transactionRoutes = require('./routes/transactionRoutes');
 const gptadviceRoutes = require('./routes/gpt_advice');
+const plaidRoutes = require('./routes/plaidRoutes');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.get('/api/greetings', (req, res) => {
 // API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/plaid', plaidRoutes);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/gpt/advice', gptadviceRoutes);
