@@ -1,45 +1,52 @@
-import { useEffect, useState } from 'react';
-import { PieChart as RePieChart, Pie, Tooltip, Cell, Legend, ResponsiveContainer } from 'recharts';
-import { getCategorySummary } from '../../services/analytics';
+import { PieChart as RePieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { useMemo } from 'react';
 
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#00C49F', '#FFBB28', '#FF8042', '#8dd1e1'];
+const COLORS = ['#3B82F6', '#1E40AF', '#60A5FA', '#93C5FD', '#DBEAFE', '#EFF6FF'];
 
-export default function PieChart() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    getCategorySummary()
-      .then(res => setData(res))
-      .catch(err => console.error("Error fetching category summary:", err));
-  }, []);
+const PieChart = ({ data }) => {
+  const pieChartData = useMemo(() => {
+    const categoryTotals = {};
+    data
+      .filter(t => t.type === 'expense')
+      .forEach(transaction => {
+        categoryTotals[transaction.category] = (categoryTotals[transaction.category] || 0) + transaction.amount;
+      });
+    return Object.entries(categoryTotals).map(([category, amount]) => ({
+      name: category,
+      value: amount
+    }));
+  }, [data]);
 
   return (
-    <div className="flex flex-col items-center text-center">
-      <h2 className="text-xl font-semibold mb-4">Spending by Category</h2>
-
-      {Array.isArray(data) && data.length > 0 ? (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-xl font-semibold text-blue-900 mb-4">Expenses by Category</h3>
+      {pieChartData.length > 0 ? (
         <ResponsiveContainer width="100%" height={300}>
           <RePieChart>
             <Pie
-              data={data}
-              dataKey="totalAmount"
-              nameKey="category"
+              data={pieChartData}
               cx="50%"
               cy="50%"
-              outerRadius={100}
-              label
+              labelLine={false}
+              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
             >
-              {data.map((_, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              {pieChartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend layout="vertical" align="right" verticalAlign="middle" />
+            <Tooltip formatter={(value) => [`$${value.toFixed(2)}`, 'Amount']} />
           </RePieChart>
         </ResponsiveContainer>
       ) : (
-        <p className="text-gray-500">No data available for categories.</p>
+        <div className="text-center py-8 text-blue-500">
+          No expense data to display.
+        </div>
       )}
     </div>
   );
-}
+};
+
+export default PieChart;

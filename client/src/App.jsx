@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Login from './pages/Login.jsx'
 import Greeting from './pages/Greeting/Greeting'
 import EmailVerify from './pages/EmailVerify';

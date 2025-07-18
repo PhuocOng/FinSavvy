@@ -1,27 +1,19 @@
 import React from 'react';
+import { Calendar } from 'lucide-react';
 
-const FilterByDate = ({ setDateFilter }) => {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setDateFilter(prev => ({ ...prev, [name]: value }));
-  };
-
+const FilterByDate = ({ dateFilter, setDateFilter }) => {
   return (
-    <div className="flex items-center gap-3">
-      <label className="text-sm font-medium">From:</label>
-      <input
-        type="date"
-        name="from"
-        onChange={handleChange}
-        className="border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-      <label className="text-sm font-medium">To:</label>
-      <input
-        type="date"
-        name="to"
-        onChange={handleChange}
-        className="border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+    <div>
+      <label className="block text-sm font-medium text-blue-700 mb-2">Date From</label>
+      <div className="relative">
+        <Calendar className="absolute left-3 top-3 w-4 h-4 text-blue-500" />
+        <input
+          type="date"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+          className="w-full pl-10 pr-3 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
     </div>
   );
 };

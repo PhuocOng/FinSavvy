@@ -1,34 +1,45 @@
-import { useEffect, useState } from 'react';
 import { BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getMonthlySummary } from '../../services/analytics';
+import { useMemo } from 'react';
 
-export default function BarChart() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    getMonthlySummary()
-      .then(res => setData(res))
-      .catch(err => console.error("Error fetching monthly summary:", err));
-  }, []);
+const BarChart = ({ data }) => {
+  const barChartData = useMemo(() => {
+    const monthlyData = {};
+    data.forEach(transaction => {
+      const month = transaction.date.substring(0, 7);
+      if (!monthlyData[month]) {
+        monthlyData[month] = { month, income: 0, expenses: 0 };
+      }
+      if (transaction.type === 'income') {
+        monthlyData[month].income += transaction.amount;
+      } else {
+        monthlyData[month].expenses += transaction.amount;
+      }
+    });
+    return Object.values(monthlyData).sort((a, b) => a.month.localeCompare(b.month));
+  }, [data]);
 
   return (
-    <div className="flex flex-col items-center text-center">
-      <h2 className="text-xl font-semibold mb-4">Monthly Spending Overview</h2>
-
-      {Array.isArray(data) && data.length > 0 ? (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-xl font-semibold text-blue-900 mb-4">Monthly Income vs Expenses</h3>
+      {barChartData.length > 0 ? (
         <ResponsiveContainer width="100%" height={300}>
-          <ReBarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
+          <ReBarChart data={barChartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+            <XAxis dataKey="month" stroke="#6B7280" />
+            <YAxis stroke="#6B7280" />
+            <Tooltip formatter={(value) => [`$${value.toFixed(2)}`, '']} />
             <Legend />
-            <Bar dataKey="totalAmount" fill="#4f46e5" name="Total Spending" />
+            <Bar dataKey="income" fill="#10B981" name="Income" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="expenses" fill="#EF4444" name="Expenses" radius={[4, 4, 0, 0]} />
           </ReBarChart>
         </ResponsiveContainer>
       ) : (
-        <p className="text-gray-500">No monthly data available.</p>
+        <div className="text-center py-8 text-blue-500">
+          No monthly data to display.
+        </div>
       )}
     </div>
   );
-}
+};
+
+export default BarChart;
