@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 5000;
 
 
 
-    console.log(`   - GET /api/health - Health check`);
   });
 }).catch((err) => {
   console.error("❌ Failed to connect to DB. Server not started.");
