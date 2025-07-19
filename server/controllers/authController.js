@@ -210,7 +210,7 @@ const sendResetOtp = async (req, res) => {
             text: `Your OTP for resetting password is ${otp}. Use this OTP to proceed with resetting your password.`, html: PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace("{{password}}", user.password)
         }
 
-        await transporter.sendMail(mailOption)
+        // await transporter.sendMail(mailOption)
 
         return res.json({success: true, message: "OTP sent to your email"})
         
