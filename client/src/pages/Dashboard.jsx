@@ -4,7 +4,7 @@ import BarChart from '../components/Dashboard/BarChart';
 import TransactionTable from '../components/Dashboard/TransactionTable';
 import FilterByCategory from '../components/Dashboard/FilterByCategory';
 import FilterByDate from '../components/Dashboard/FilterByDate';
-import ChatBot from './ChatBot/Chatbot';
+import ChatBot from './ChatBot/ChatBot';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
