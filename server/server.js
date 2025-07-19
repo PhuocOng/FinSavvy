@@ -20,8 +20,7 @@ connectDB().then(() => {
     app.listen(PORT, () => {
       console.log(`✅ DB connected. Server running at http://localhost:${PORT}`);
     });
-  })
-  .catch((err) => {
+  }).catch((err) => {
     console.error("❌ Failed to connect to DB. Server not started.");
     console.error(err);
     process.exit(1); // Properly exit with failure
