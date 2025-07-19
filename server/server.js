@@ -15,7 +15,6 @@ connectDB().then(() => {
   console.error("❌ Failed to connect to DB. Server not started.");
 });
 
-const app = require('./app');
 const connectDB = require('./config/db');
 
 const PORT = process.env.PORT || 5000;
