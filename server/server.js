@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 5000;
 
 
 
-    console.log(`   - GET /api/greetings - Say hi to friends`);
+
     console.log(`   - GET /api/health - Health check`);
   });
 }).catch((err) => {
