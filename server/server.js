@@ -16,10 +16,7 @@ connectDB().then(() => {
 });
 
 
-
-
-connectDB()
-  .then(() => {
+connectDB().then(() => {
     app.listen(PORT, () => {
       console.log(`✅ DB connected. Server running at http://localhost:${PORT}`);
     });
