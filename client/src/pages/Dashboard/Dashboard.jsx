@@ -64,22 +64,16 @@ const Dashboard = () => {
         </div>
 
         {/* Filters */}
-        <div className="filters-container">
-          <div className="filters-header">
-            <Filter className="filter-icon" />
-            <h2 className="filters-title">Filters</h2>
-          </div>
-          <div className="filters-grid">
-            <FilterByDate 
-              dateFilter={dateFilter}
-              setDateFilter={setDateFilter} 
-            />
-            <FilterByCategory
-              categoryFilter={categoryFilter}
-              setCategoryFilter={setCategoryFilter} 
-              categories={categoryOptions} />
-          </div>
-          <div className="filters-actions">
+        <div className="filters-grid-horizontal">
+          <FilterByDate 
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter} 
+          />
+          <FilterByCategory
+            categoryFilter={categoryFilter}
+            setCategoryFilter={setCategoryFilter} 
+            categories={categoryOptions}
+          />
             <button
               onClick={() => {
                 setDateFilter({ from: '', to: '' });
@@ -89,7 +83,6 @@ const Dashboard = () => {
             >
               Clear Filters
             </button>
-          </div>
         </div>
 
         {/* Charts */}
@@ -99,7 +92,7 @@ const Dashboard = () => {
         </div>
 
         {/* Transaction Table */}
-        <TransactionTable transactions={filteredTransactions} />\
+        <TransactionTable transactions={filteredTransactions} />
         <ChatBot />
       </div>
     </div>

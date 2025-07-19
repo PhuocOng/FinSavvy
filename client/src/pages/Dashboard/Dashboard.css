@@ -29,68 +29,6 @@
   color: #1d4ed8;
 }
 
-/* Stats Cards Grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-/* Individual Stat Card */
-.stat-card {
-  background-color: #ffffff;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  padding: 1.5rem;
-  border-left-width: 4px;
-}
-
-.stat-card.income-card { border-color: #3b82f6; }
-.stat-card.expense-card { border-color: #ef4444; }
-.stat-card.net-card { border-color: #22c55e; }
-
-.stat-card-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.stat-card-label {
-  color: #2563eb;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-}
-
-.stat-card-amount {
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 700;
-  color: #1e3a8a;
-}
-
-.text-positive { color: #16a34a; }
-.text-negative { color: #dc2626; }
-
-.stat-card-icon-wrapper {
-  padding: 0.75rem;
-  border-radius: 9999px;
-}
-
-.stat-card-icon-wrapper.income-icon-bg { background-color: #dbeafe; }
-.stat-card-icon-wrapper.expense-icon-bg { background-color: #fee2e2; }
-.stat-card-icon-wrapper.net-icon-bg { background-color: #dcfce7; }
-
-.stat-card-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.stat-card-icon.income-icon-color { color: #2563eb; }
-.stat-card-icon.expense-icon-color { color: #dc2626; }
-.stat-card-icon.net-icon-color { color: #16a34a; }
-
 /* Filters Section */
 .filters-container {
   background-color: #fff;
@@ -113,17 +51,16 @@
   color: #2563eb;
 }
 
-.filters-title {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 600;
-  color: #1e3a8a;
-}
-
-.filters-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1rem;
+.filters-grid-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: #f9fbff;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
 }
 
 .filter-label {
@@ -149,9 +86,9 @@
 }
 
 .filters-actions {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
-  gap: 0.5rem;
+  justify-content: flex-start;
 }
 
 .clear-filters-btn {
