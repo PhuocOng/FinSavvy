@@ -42,7 +42,7 @@ const register = async(req, res) => {
             text: `Welcome to FinSavvy. Your account has just been created with email id: ${email}`
         }
 
-        await transporter.sendMail(mailOptions);
+        // await transporter.sendMail(mailOptions);
 
         return res.json({ success: true, message: "User registered successfully!" });
 
