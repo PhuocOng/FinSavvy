@@ -1,11 +1,8 @@
 @import "tailwindcss";
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FEFBC7 0%, #5EABD6 100%);
   color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
