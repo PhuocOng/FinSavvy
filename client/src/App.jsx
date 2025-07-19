@@ -9,6 +9,7 @@ import ResetPassword from './pages/ResetPassword';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Navbar from './components/Navbar.jsx'
+import Homepage from "./pages/HomePage/Homepage";        // Your main homepage
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
           <Route path="/email-verify" element={<EmailVerify />} /> 
           <Route path="/reset-password" element={<ResetPassword />} /> 
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/homepage" element={<Homepage />} />
+          
         </Routes>
       </div>
     </div>
