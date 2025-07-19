@@ -8,6 +8,8 @@ import FilterByDate from '../../components/Dashboard/FilterByDate';
 import FilterByCategory from '../../components/Dashboard/FilterByCategory';
 import './Dashboard.css'; // Import the stylesheet
 // import { use } from '../../../../server/config/nodemailer';
+import ChatBot from '../ChatBot/Chatbot';
+
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]); //Take all transactions
@@ -57,50 +59,8 @@ const Dashboard = () => {
       <div className="dashboard-content">
         {/* Header */}
         <div className="dashboard-header">
-          <h1 className="dashboard-title">Financial Dashboard</h1>
-          <p className="dashboard-subtitle">Track your income, expenses, and financial trends</p>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="stats-grid">
-          {/* Total Income */}
-          <div className="stat-card income-card">
-            <div className="stat-card-content">
-              <div>
-                <p className="stat-card-label">Total Income</p>
-                <p className="stat-card-amount">${totalIncome.toFixed(2)}</p>
-              </div>
-              <div className="stat-card-icon-wrapper income-icon-bg">
-                <TrendingUp className="stat-card-icon income-icon-color" />
-              </div>
-            </div>
-          </div>
-          {/* Total Expenses */}
-          <div className="stat-card expense-card">
-            <div className="stat-card-content">
-              <div>
-                <p className="stat-card-label">Total Expenses</p>
-                <p className="stat-card-amount">${totalExpenses.toFixed(2)}</p>
-              </div>
-              <div className="stat-card-icon-wrapper expense-icon-bg">
-                <CreditCard className="stat-card-icon expense-icon-color" />
-              </div>
-            </div>
-          </div>
-          {/* Net Amount */}
-          <div className="stat-card net-card">
-            <div className="stat-card-content">
-              <div>
-                <p className="stat-card-label">Net Amount</p>
-                <p className={`stat-card-amount ${netAmount >= 0 ? 'text-positive' : 'text-negative'}`}>
-                  ${netAmount.toFixed(2)}
-                </p>
-              </div>
-              <div className="stat-card-icon-wrapper net-icon-bg">
-                <DollarSign className="stat-card-icon net-icon-color" />
-              </div>
-            </div>
-          </div>
+          <h1 className="dashboard-title">Transaction Dashboard</h1>
+          <p className="dashboard-subtitle">Visualize your spendings and stay on top of your finances</p>
         </div>
 
         {/* Filters */}
@@ -139,7 +99,8 @@ const Dashboard = () => {
         </div>
 
         {/* Transaction Table */}
-        <TransactionTable transactions={filteredTransactions} />
+        <TransactionTable transactions={filteredTransactions} />\
+        <ChatBot />
       </div>
     </div>
   );

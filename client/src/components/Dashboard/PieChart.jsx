@@ -7,7 +7,7 @@ const PieChart = ({ data }) => {
   const pieChartData = useMemo(() => {
     const categoryTotals = {};
     data
-      .filter(t => t.type === 'expense')
+      .filter(t => t.category)
       .forEach(transaction => {
         categoryTotals[transaction.category] = (categoryTotals[transaction.category] || 0) + transaction.amount;
       });
