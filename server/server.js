@@ -23,5 +23,5 @@ connectDB().then(() => {
   }).catch((err) => {
     console.error("❌ Failed to connect to DB. Server not started.");
     console.error(err);
-    process.exit(1); // Properly exit with failure
+    process.exit(1); 
   });
