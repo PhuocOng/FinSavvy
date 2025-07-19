@@ -43,7 +43,6 @@ const Navbar = () => {
     <div className="w-full bg-gradient-to-r from-[#FEFBC7] to-[#5EABD6]">
       <header className="flex justify-between items-center text-black py-8 px-10 md:px-32 bg-white drop-shadow-md">
         <a href="#" className="">
-          <img src="" alt="" className="w-52 hover:scale-105 transition-all" />
         </a>
 
 
