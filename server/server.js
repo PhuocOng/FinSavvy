@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 5000;
 
 
 
-  console.error("❌ Failed to connect to DB. Server not started.");
 });
 
 
