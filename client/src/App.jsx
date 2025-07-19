@@ -15,7 +15,7 @@ function App() {
     <div className="app">
       <Navbar />
       
-      <div className="pt-35">
+      <div className="pt-15">
         <ToastContainer />
         <Routes>
           <Route path="/" element={<Home />} />
