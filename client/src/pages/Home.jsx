@@ -31,7 +31,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="text-center pt-8 pb-16">
-        <h1 className="text-5xl font-bold mb-4 text-black">FinSavvy</h1>
+        <h1 className="text-5xl font-bold mb-4 text-black">🎯 FinSavvy</h1>
         <p className="text-xl opacity-80">Your Personal Finance Management App</p>
       </section>
 
