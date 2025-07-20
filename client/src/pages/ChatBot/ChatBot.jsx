@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { toast } from 'react-toastify'; 
 import axios from "axios";
 
-const backendUrl = import.meta.env.VITE_API_BASE_URL;
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 const ChatBot = () => {
