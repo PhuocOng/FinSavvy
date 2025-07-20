@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ChatBot from '../pages/ChatBot/Chatbot';
+import ChatBot from '../pages/ChatBot/ChatBot';
 
 const Home = () => {
   const [greetings, setGreetings] = useState(null);
