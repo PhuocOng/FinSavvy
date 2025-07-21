@@ -78,7 +78,7 @@ const Navbar = () => {
       : 
       (  
         <Link to="/login">
-          <button className='flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-white hover:bg-gray-100 transition-all'>
+          <button className='flex items-center gap-2 px-6 py-2 rounded-md bg-sky-400 text-black hover:bg-sky-600 transition-all duration-300 shadow-sm'>
             Login
             <img src={assets.arrow_icon} alt="" />
           </button>
