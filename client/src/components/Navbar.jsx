@@ -61,7 +61,7 @@ const Navbar = () => {
        
     {/* Login button */}
       {userData ? ( // justify-center and items-center only work when having flex container
-        <div className=' flex justify-center items-center rounded-full bg-black relative group'>
+        <div className=' flex justify-center items-center rounded-full bg-[#5EABD6] relative group w-8 h-8'>
           {userData.name[0].toUpperCase()}
           
           <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10'>
