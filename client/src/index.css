@@ -24,12 +24,11 @@ a:hover {
 }
 
 body {
-  margin: 0;
-  /* display: flex; */
-  display: block; 
-  place-items: center;
-  min-width: 320px;
+  width: 100%;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, #3b82f6, #2563eb); /* Blue gradient */
 }
 
 h1 {
@@ -59,7 +58,6 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
   }
   a:hover {
     color: inherit;
