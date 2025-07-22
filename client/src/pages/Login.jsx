@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppContent } from '../context/AppContext';
 import axios from 'axios'
 import { toast } from 'react-toastify'; // use toast for showing quick noti to user
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const Login = () => {
   const [state, setState] = useState('Sign Up')
@@ -11,6 +12,7 @@ const Login = () => {
   const[email, setEmail] = useState('')
   const[password, setPassword] = useState('')
   const navigate = useNavigate();
+  const { dispatch } = useAuthContext();
 
   const {backendUrl, setIsLoggedin, getUserData} = useContext(AppContent)
 
@@ -27,7 +29,7 @@ const Login = () => {
         if (data.success) {
           // setIsLoggedin(true)
           // getUserData()
-          // navigate('/')
+          dispatch({ type: 'LOGIN', payload: {name, email} });
           navigate('/email-verify');
         } else {
           toast.error(data.message)
@@ -39,6 +41,7 @@ const Login = () => {
         if (data.success) {
           setIsLoggedin(true)
           getUserData()
+          dispatch({ type: 'LOGIN', payload: data.user });
           navigate('/')
         } else {
           toast.error(data.message)
@@ -52,9 +55,9 @@ const Login = () => {
   }
 
   return (
-    <div className='login-container flex items-center justify-center min-h-screen px-6 sm:px-0'>
+    <div className='flex items-center justify-center min-h-screen px-6 sm:px-0'>
 
-      <div className='bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-sm'>
+      <div className='p-10 rounded-lg shadow-lg w-full sm:w-96 text-sm'>
         
         <h2 className='text-3xl font-semibold text-center mb-3'>{state === 'Sign Up' ? 'Create Account' : 'Login'}</h2>
         <p className='text-center text-sm mb-6'>{state === 'Sign Up' ? 'Create your Account' : 'Login to your account'}</p>

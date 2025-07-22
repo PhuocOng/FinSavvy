@@ -1,7 +1,6 @@
 @import "tailwindcss";
 .app {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
   color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   width: 100vw;

@@ -1,36 +1,36 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './App.css';
+import { useAuthContext } from './hooks/useAuthContext.js';
+import { ToastContainer } from 'react-toastify';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import Navbar from './components/Navbar/Navbar.jsx';
+import Homepage from "./pages/HomePage/Homepage";
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
-import Login from './pages/Login.jsx'
-import Home from './pages/Home.jsx'
+import Login from './pages/Login.jsx';
 import EmailVerify from './pages/EmailVerify';
 import ResetPassword from './pages/ResetPassword';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
-import Navbar from './components/Navbar.jsx'
-import Homepage from "./pages/HomePage/Homepage";        // Your main homepage
+import LandingPage from './pages/HomePage/Landingpage.jsx';
+import PublicNavbar from './components/Navbar/PublicNavbar.jsx';
 
 function App() {
+  const { user } = useAuthContext();
+  const location = useLocation();
+
+  // Decide which navbar to render
+  const isLandingPage = location.pathname === '/' && !user;
+
   return (
     <div className="app">
-      <Navbar />
-      
-      <div className="pt-15">
-        <ToastContainer />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} /> 
-          <Route path="/email-verify" element={<EmailVerify />} /> 
-          <Route path="/reset-password" element={<ResetPassword />} /> 
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/homepage" element={<Homepage />} />
-          
-        </Routes>
-      </div>
+      <ToastContainer />
+       {isLandingPage ? <PublicNavbar /> : user && <Navbar />}
+      <Routes>
+        <Route path="/" element={user ? <Homepage /> : <LandingPage />} />
+        <Route path="/login" element={!user ? <Login /> : <Navigate to='/' />} />
+        <Route path="/email-verify" element={<EmailVerify />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to='/login' />} />
+      </Routes>
     </div>
-  )
+  );
 }
 
 export default App;
