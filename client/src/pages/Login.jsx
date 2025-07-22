@@ -27,10 +27,10 @@ const Login = () => {
         const {data} = await axios.post(backendUrl + '/api/auth/register', {name, email, password})
 
         if (data.success) {
-          setIsLoggedin(true)
-          getUserData()
+          // setIsLoggedin(true)
+          // getUserData()
           dispatch({ type: 'LOGIN', payload: {name, email} });
-          navigate('/')
+          navigate('/email-verify');
         } else {
           toast.error(data.message)
         }
@@ -55,14 +55,14 @@ const Login = () => {
   }
 
   return (
-    <div className='flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-50 to-blue-100 '>
+    <div className='flex items-center justify-center min-h-screen px-6 sm:px-0'>
 
       <div className='p-10 rounded-lg shadow-lg w-full sm:w-96 text-sm'>
         
         <h2 className='text-3xl font-semibold text-center mb-3'>{state === 'Sign Up' ? 'Create Account' : 'Login'}</h2>
         <p className='text-center text-sm mb-6'>{state === 'Sign Up' ? 'Create your Account' : 'Login to your account'}</p>
 
-        <form onSubmit={onSubmitHandler}>
+        <form onSubmit={onSubmitHandler} >
           {state === 'Sign Up' && (
             <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
               <img src={assets.person_icon} />

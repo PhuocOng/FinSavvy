@@ -131,7 +131,7 @@ const ResetPassword = () => {
         <p className='text-center mb-6 text-indigo-300'>Enter the new password below</p>
         <div className='mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]'>
           <img src={assets.lock_icon} alt="" className='w-3 h-3'/>
-          <input type='password' placeholder='New password' className='outline-none bg-transparent' value={newPassword} onChange={e => setNewPassword(e.target.value)} required/>
+          <input type='password' placeholder='New password' className='outline-none bg-transparent w-full' value={newPassword} onChange={e => setNewPassword(e.target.value)} required/>
         </div>
 
         <button className='w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-900 rounded-full'>Submit</button>

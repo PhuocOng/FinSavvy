@@ -80,31 +80,6 @@ const Navbar = () => {
             </div>
           </div>
         )}
-
-        {/* <i
-          className={`xl:hidden block text-5xl cursor-pointer ${isMenuOpen ? "bx bx-x" : "bx bx-menu"}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        ></i> */}
-
-        {/* Mobile Menu */}
-        {/* <div
-          className={`absolute xl:hidden top-24 left-0 w-full bg-white flex flex-col items-center gap-6 font-semibold text-lg transform transition-all duration-300 ease-in-out 
-          ${isMenuOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"}`}
-        >
-          <Link to="/" onClick={() => setIsMenuOpen(false)} className="w-full text-center p-4 hover:bg-sky-400 hover:text-white transition-all">Home</Link>
-
-          {userData && (
-            <>
-              <Link to="/dashboard" onClick={() => setIsMenuOpen(false)} className="w-full text-center p-4 hover:bg-sky-400 hover:text-white transition-all">Dashboard</Link>
-              <Link to="/explore" onClick={() => setIsMenuOpen(false)} className="w-full text-center p-4 hover:bg-sky-400 hover:text-white transition-all">Explore</Link>
-              <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="w-full text-center p-4 hover:bg-sky-400 hover:text-white transition-all">Contact</Link>
-            </>
-          )}
-
-          {!userData && (
-            <Link to="/login" onClick={() => setIsMenuOpen(false)} className="w-full text-center p-4 hover:bg-sky-400 hover:text-white transition-all">Login</Link>
-          )}
-        </div> */}
       </header>
     </div>
   );

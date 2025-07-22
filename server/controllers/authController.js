@@ -35,14 +35,36 @@ const register = async(req, res) => {
         })
 
         // Sending welcome email
-        const mailOptions = {
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+        user.verifyOtp = otp;
+        user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+        await user.save();
+
+        const verifyEmailOption = {
             from: process.env.SENDER_EMAIL,
-            to: email, 
+            to: email,
+            subject: 'Account Verification OTP',
+            text: `Your OTP is ${otp}. Verify your account using this OTP.`,
+            html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}", email)
+        };
+        await transporter.sendMail(verifyEmailOption);
+
+        const welcomeMailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: email,
             subject: 'Welcome to FinSavvy',
             text: `Welcome to FinSavvy. Your account has just been created with email id: ${email}`
-        }
+        };
 
-        // await transporter.sendMail(mailOptions);
+        // // Sending welcome email
+        // const mailOptions = {
+        //     from: process.env.SENDER_EMAIL,
+        //     to: email, 
+        //     subject: 'Welcome to FinSavvy',
+        //     text: `Welcome to FinSavvy. Your account has just been created with email id: ${email}`
+        // }
+
+        await transporter.sendMail(welcomeMailOptions);
 
         return res.json({ success: true, message: "User registered successfully!" });
 
@@ -127,7 +149,7 @@ const sendVerifyOtp = async (req, res) => {
             text: `Your OTP is ${otp}. Verify your account using this OTP`, html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}", user.email)
         }
 
-        // await transporter.sendMail(mailOption)
+        await transporter.sendMail(mailOption)
 
         return res.json({ success: true, message: "OTP sent to email successfully" });
 
@@ -210,7 +232,7 @@ const sendResetOtp = async (req, res) => {
             text: `Your OTP for resetting password is ${otp}. Use this OTP to proceed with resetting your password.`, html: PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace("{{password}}", user.password)
         }
 
-        // await transporter.sendMail(mailOption)
+        await transporter.sendMail(mailOption)
 
         return res.json({success: true, message: "OTP sent to your email"})
         

@@ -28,7 +28,7 @@
     "mongoose": "^8.16.2",
     "multer": "^2.0.1",
     "nodemailer": "^7.0.5",
-    "openai": "^5.8.4",
+    "openai": "^5.10.1",
     "parser": "^0.1.4",
     "plaid": "^36.0.0",
     "react-chatbot-kit": "^2.2.2",
