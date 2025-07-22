@@ -8,7 +8,7 @@ import FilterByDate from '../../components/Dashboard/FilterByDate';
 import FilterByCategory from '../../components/Dashboard/FilterByCategory';
 import './Dashboard.css'; // Import the stylesheet
 // import { use } from '../../../../server/config/nodemailer';
-import ChatBot from '../ChatBot/Chatbot';
+import ChatBot from '../ChatBot/ChatBot';
 
 
 const Dashboard = () => {
