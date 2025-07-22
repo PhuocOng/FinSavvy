@@ -1,33 +1,39 @@
-import { useAuthContext } from './hooks/useAuthContext.js';
+import React, { useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+
 import Navbar from './components/Navbar/Navbar.jsx';
-import Homepage from "./pages/HomePage/Homepage";
-import Dashboard from './pages/Dashboard/Dashboard.jsx';
-import Login from './pages/Login.jsx';
-import EmailVerify from './pages/EmailVerify';
-import ResetPassword from './pages/ResetPassword';
-import LandingPage from './pages/HomePage/Landingpage.jsx';
 import PublicNavbar from './components/Navbar/PublicNavbar.jsx';
 
+import Homepage from './pages/HomePage/Homepage.jsx';
+import Dashboard from './pages/Dashboard/Dashboard.jsx';
+import Login from './pages/Login.jsx';
+import EmailVerify from './pages/EmailVerify.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
+import LandingPage from './pages/HomePage/Landingpage.jsx';
+
+import { AppContent } from './context/AppContext.jsx';
+
 function App() {
-  const { user } = useAuthContext();
+  const { isLoggedin, userData } = useContext(AppContent);
   const location = useLocation();
 
-  // Decide which navbar to render
-  const isLandingPage = location.pathname === '/' && !user;
+  // Show PublicNavbar only if user is not logged in and on landing page
+  const isLandingPage = location.pathname === '/' && !isLoggedin;
 
   return (
-    <div className="app">
+    <div className="app min-h-screen w-full bg-gradient-to-br from-blue-50 to-blue-100">
       <ToastContainer />
-       {isLandingPage ? <PublicNavbar /> : user && <Navbar />}
+      
+      {isLandingPage ? <PublicNavbar /> : isLoggedin && <Navbar />}
+
       <Routes>
-        <Route path="/" element={user ? <Homepage /> : <LandingPage />} />
-        <Route path="/login" element={!user ? <Login /> : <Navigate to='/' />} />
+        <Route path="/" element={isLoggedin ? <Homepage /> : <LandingPage />} />
+        <Route path="/login" element={!isLoggedin ? <Login /> : <Navigate to="/" />} />
         <Route path="/email-verify" element={<EmailVerify />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to='/login' />} />
+        <Route path="/dashboard" element={isLoggedin ? <Dashboard /> : <Navigate to="/login" />} />
       </Routes>
     </div>
   );
