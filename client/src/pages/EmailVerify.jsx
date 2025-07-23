@@ -66,7 +66,7 @@ const EmailVerify = () => {
   // IMPORTANT!!!!
   return (
     <div className='flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100'>
-      <form onSubmit={onSubmitHandler} className='bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm'>
+      <form onSubmit={onSubmitHandler} className='bg-[#d0ebff] p-8 rounded-lg shadow-lg w-96 text-sm'>
         <h1 className='text-2xl font-semibold text-center mb-4'>Email Verify OTP</h1>
         <p className='text-center mb-6 text-indigo-300'>Enter the 6-digit code sent to your email</p>
         
@@ -74,7 +74,7 @@ const EmailVerify = () => {
           {Array(6).fill(0).map((dummy, index) => ( // dummy is 0, index is position
             <input 
               type="text" maxLength='1' key={index} required 
-              className='w-12 h-12 text-center text-xl rounded-md bg-[#333A5C]'
+              className='w-12 h-12 text-center text-xl rounded-md bg-white'
               ref={e => inputRefs.current[index] = e}
               onInput={(e) => handleInput(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
@@ -82,7 +82,7 @@ const EmailVerify = () => {
           ))}
         </div>
 
-        <button className='w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-900 rounded-full'>Verify email</button>
+        <button className='w-full py-3 bg-gradient-to-r from-[#60a5fa] to-[#3b82f6] rounded-full'>Verify email</button>
       </form>
       
     </div>
