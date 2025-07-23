@@ -67,15 +67,15 @@ const register = async(req, res) => {
         await transporter.sendMail(welcomeMailOptions);
 
        
-          return res.json({
-      success: true,
-      message: "User registered successfully! OTP sent to email.",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-  });
+        return res.json({
+            success: true,
+            message: "User registered successfully! OTP sent to email.",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+            },
+        });
 
     } catch (error) {
         res.json({success:false, message:error.message})
@@ -112,13 +112,14 @@ const login = async(req, res) => {
         })
 
            return res.json({
-      success: true,
-      message: "Logged in successfully",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAccountVerified: user.isAccountVerified,
+            success: true,
+            token,
+            message: "Logged in successfully",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                isAccountVerified: user.isAccountVerified,
       },
     });
         
@@ -177,7 +178,8 @@ const sendVerifyOtp = async (req, res) => {
 }
 
 const verifyEmail = async (req, res) => {
-    const {userId, otp} = req.body;
+    const {otp} = req.body;
+    const userId = req.user?.id
 
     if (!userId || !otp) {
         return res.json({success: false, message: 'Missing details'})
