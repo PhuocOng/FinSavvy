@@ -2,8 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
-
+const Transaction = require("../models/transactionModel.js");
 const getTransactions = (req, res) => {
+  const userId = req.user?.id;
   const filePath = path.join(__dirname, '../mock/plaid_transaction.json');
 
   fs.readFile(filePath, (err, data) => {
@@ -22,6 +23,7 @@ const getTransactions = (req, res) => {
         name: txn.name || txn.merchant_name,
         amount: txn.amount,
         category: txn.personal_finance_category?.primary || "Uncategorized",
+        userId: userId, 
       }));
 
       res.json({ transactions: cleanedTransactions });

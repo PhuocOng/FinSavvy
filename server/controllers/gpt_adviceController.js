@@ -15,7 +15,9 @@ const getResponses = async (req,res) => {
                     ...prompt]
      }); 
      //Send back GPT response
-     res.status(200).json({reply: responses.choices[0].message.content.trim()});
+     res.status(200).json({
+        userId: req.user?.id,
+      reply: responses.choices[0].message.content.trim()});
      } catch(error)
      {
         res.status(500).json({error: `Internal server error`});

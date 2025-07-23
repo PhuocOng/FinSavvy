@@ -3,7 +3,7 @@ const User = require("../models/User.js");
 
 const getUserData = async (req, res) => {
     try {
-        const {userId} = req.body;
+        const userId = req.user?.id;
 
         const user = await User.findById(userId);
 
