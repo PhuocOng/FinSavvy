@@ -25,9 +25,10 @@ const ChatBot = () => {
         //Format chat history for API request
         const formattedHistory = history.map(({role,text})=>({role, content: text}));
 
-        const response = await axios.post(backendUrl+ '/api/gpt/advice', {
-                prompt: formattedHistory
-            });
+        const response = await axios.post(backendUrl+ '/api/gpt/advice',
+                {prompt: formattedHistory},
+                 { withCredentials: true } 
+            );
 
         //Clean and update chat history with bot's response
             const apiReponseText = response.data.reply;

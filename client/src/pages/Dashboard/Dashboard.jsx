@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [dateFilter, setDateFilter] = useState({ from: '', to: ''});
 
   useEffect(() => {
-    axios.get('/api/transactions')
+    axios.get('/api/transactions', { withCredentials: true })
       .then(res => {
         const txns = res.data.transactions;
         setTransactions(txns); //save full list
