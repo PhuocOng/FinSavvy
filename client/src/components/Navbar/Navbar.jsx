@@ -2,29 +2,12 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import { AppContent } from '../../context/AppContext';
-import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const { userData, backendUrl, setUserData, setIsLoggedin } = useContext(AppContent);
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { dispatch } = useContext(AuthContext);
-
-  const sendVerificationOtp = async () => {
-    try {
-      const { data } = await axios.post(backendUrl + '/api/auth/send-verify-otp', { userId: userData._id });
-      if (data.success) {
-        navigate('/email-verify');
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
 
   const logout = async () => {
     try {
@@ -32,7 +15,6 @@ const Navbar = () => {
       if (data.success) {
         setIsLoggedin(false);
         setUserData(null);
-        dispatch({ type: 'LOGOUT' });
         navigate('/');
       }
     } catch (error) {
@@ -72,9 +54,6 @@ const Navbar = () => {
             {userData?.name?.[0].toUpperCase()}
             <div className="absolute hidden group-hover:block top-10 right-0 z-10 text-black rounded bg-gray-300 shadow-md">
               <ul className="list-none m-0 p-2 text-sm">
-                {!userData.isAccountVerified && (
-                  <li onClick={sendVerificationOtp} className="py-1 px-2 hover:bg-gray-400 cursor-pointer">Verify Email</li>
-                )}
                 <li onClick={logout} className="py-1 px-2 hover:bg-gray-400 cursor-pointer">Logout</li>
               </ul>
             </div>
