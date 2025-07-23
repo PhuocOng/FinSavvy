@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { assets } from '../../assets/assets';
 import { AppContent } from '../../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const { userData, backendUrl, setUserData, setIsLoggedin } = useContext(AppContent);
+  
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -14,7 +14,7 @@ const Navbar = () => {
       const { data } = await axios.post(backendUrl + '/api/auth/logout');
       if (data.success) {
         setIsLoggedin(false);
-        setUserData(null);
+        setUserData(false);
         navigate('/');
       }
     } catch (error) {
@@ -31,7 +31,7 @@ const Navbar = () => {
          </Link>
 
         {/* Nav Links */}
-        <ul className="hidden xl:flex items-center gap-12 text-black font-semibold text-base">
+        <ul className="flex items-center gap-12 text-black font-semibold text-base">
           <Link to="/" className="p-3 hover:bg-[#2563eb] hover:text-white rounded-md transition-all cursor-pointer">Home</Link>
 
           {userData && (
