@@ -3,6 +3,28 @@
 const fs = require('fs');
 const path = require('path');
 const Transaction = require("../models/transactionModel.js");
+
+const addManualExpense = async(req, res) => {
+  try {
+    const userId = req.user?.id;
+    const { name, amount, category, date } = req.body;
+
+    if (!name || !amount || !category || !date) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const newExpense = new Transaction({
+      userId, name, amount, category, date,
+    })
+
+    await newExpense.save()
+    res.status(201).json(newExpense);
+  } catch (err) {
+    console.error('Error adding manual expense:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
 const getTransactions = (req, res) => {
   const userId = req.user?.id;
   const filePath = path.join(__dirname, '../mock/plaid_transaction.json');
@@ -34,4 +56,4 @@ const getTransactions = (req, res) => {
   });
 };
 
-module.exports = { getTransactions };
+module.exports = { getTransactions, addManualExpense };

@@ -6,25 +6,22 @@ const AddExpenseForm = ({ onAdd, categoryOptions }) => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
-  const [note, setNote] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post('/api/manual-expenses', {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/transactions/manual-expenses`, {
+        name,
         amount,
         category,
         date,
-        note,
-        type: 'expense',
       }, { withCredentials: true });
 
       onAdd(res.data);
       setAmount('');
       setCategory('');
       setDate('');
-      setNote('');
     } catch (err) {
       console.error('Error adding manual expense:', err);
     }

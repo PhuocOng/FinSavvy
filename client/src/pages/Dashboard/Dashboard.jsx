@@ -24,14 +24,19 @@ const Dashboard = () => {
   const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
-    axios.get('/api/transactions', { withCredentials: true })
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/transactions`, { withCredentials: true })
       .then(res => {
         const txns = res.data.transactions;
         setTransactions(txns); //save full list
         setFilteredTransactions(txns)
 
-        const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
-        setCategoryOptions(categories) //show all list at first
+        // const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
+        // setCategoryOptions(categories) //show all list at first
+
+        const categories = [
+          'Food', 'Transport', 'Shopping', 'Entertainment', 'Health', 'Education', 'Bills', 'Others'
+        ];
+        setCategoryOptions(categories);
       })
       .catch(err => console.error('Error fetching transactions:', err));
   }, []);
@@ -115,6 +120,7 @@ const Dashboard = () => {
                 <h2>Add Expense</h2>
                 <button onClick={() => setShowAddForm(false)} className="close-btn">✕</button>
               </div>
+              {/* {console.log("CATEGORY OPTIONS:", categoryOptions)} */}
               <AddExpenseForm
                 onAdd={(expense) => {
                   handleAddManualExpense(expense);
