@@ -7,6 +7,9 @@ const User = require('../models/User');
 // Increase timeout for slower operations like DB or email
 jest.setTimeout(15000);
 
+// Mock OpenAI to prevent real API calls
+jest.mock('../config/openai.config', () => null);
+
 // Mock nodemailer to prevent real emails
 jest.mock('../config/nodemailer', () => ({
   sendMail: jest.fn().mockResolvedValue(true),
