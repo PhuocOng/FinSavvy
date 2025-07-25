@@ -1,4 +1,3 @@
-const express = require ('express');
 const openai = require ('../config/openai.config')
 
 const getResponses = async (req,res) => {
