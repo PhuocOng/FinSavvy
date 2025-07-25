@@ -31,7 +31,7 @@ describe('Authentication Routes', () => {
 
   beforeAll(async () => {
     // Connect to your test database
-    const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:5000/finsavvy-test';
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:5000/finsavvy-test';
     await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
