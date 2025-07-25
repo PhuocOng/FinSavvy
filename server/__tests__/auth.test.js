@@ -8,7 +8,13 @@ const User = require('../models/User');
 jest.setTimeout(15000);
 
 // Mock OpenAI to prevent real API calls
-jest.mock('../config/openai.config', () => null);
+jest.mock('../config/openai.config', () => ({
+  chat: {
+    completions: {
+      create: jest.fn().mockResolvedValue({ choices: [{ message: { content: 'Mock response' } }] }),
+    },
+  },
+}));
 
 // Mock nodemailer to prevent real emails
 jest.mock('../config/nodemailer', () => ({
