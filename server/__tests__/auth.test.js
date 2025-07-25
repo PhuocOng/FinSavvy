@@ -2,6 +2,23 @@ const supertest = require('supertest');
 const app = require('../app');
 const request = supertest(app);
 
+// Extend timeout globally
+jest.setTimeout(30000);
+
+// 🧪 Mock OpenAI and Nodemailer to avoid real calls
+jest.mock('../config/openai.config', () => ({
+  chat: {
+    completions: {
+      create: jest.fn().mockResolvedValue({
+        choices: [{ message: { content: 'Mock response' } }],
+      }),
+    },
+  },
+}));
+jest.mock('../config/nodemailer', () => ({
+  sendMail: jest.fn().mockResolvedValue(true),
+}));
+
 describe('Auth Routes Status Check', () => {
   const testUser = {
     name: 'Test User',
