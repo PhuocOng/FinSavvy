@@ -4,9 +4,9 @@ const app = require('../app');
 const request = supertest(app);
 const User = require('../models/User');
 
-jest.setTimeout(30000); // Increase timeout for slow DB or CI
+jest.setTimeout(30000); 
 
-// 🧪 Mock OpenAI to avoid real API calls
+// Mock OpenAI to avoid real API calls
 jest.mock('../config/openai.config', () => ({
   chat: {
     completions: {
@@ -15,7 +15,7 @@ jest.mock('../config/openai.config', () => ({
   },
 }));
 
-// 🧪 Mock Nodemailer
+// Mock Nodemailer
 jest.mock('../config/nodemailer', () => ({
   sendMail: jest.fn().mockResolvedValue(true),
 }));

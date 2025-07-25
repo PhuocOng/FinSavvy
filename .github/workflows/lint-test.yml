@@ -17,16 +17,34 @@ jobs:
       matrix:
         node-version: [18.x, 20.x]
 
+    services:
+      mongo:
+        image: mongo:6
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+
       - run: npm ci
       - run: npm run build --if-present
-      - run: npm test
+
+      - name: Run backend tests
+        env:
+          MONGODB_URI: mongodb://localhost:27017/finsavvy-test
+          OPENAI_API_KEY: test
+        run: npm test
 
   test-frontend:
     runs-on: ubuntu-latest
@@ -40,11 +58,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+
       - run: npm ci
       - run: npm run build --if-present
-      - run: npm test
+
+      - name: Run frontend tests
+        env:
+          REACT_APP_API_URL: http://localhost:5000
+        run: npm test
