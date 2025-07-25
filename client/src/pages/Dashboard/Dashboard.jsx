@@ -9,6 +9,7 @@ import FilterByCategory from '../../components/Dashboard/FilterByCategory';
 import './Dashboard.css'; // Import the stylesheet
 // import { use } from '../../../../server/config/nodemailer';
 import ChatBot from '../ChatBot/ChatBot';
+import AddExpenseForm from '../../components/AddExpense/AddExpenseForm';
 
 
 const Dashboard = () => {
@@ -17,9 +18,13 @@ const Dashboard = () => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState('');
   const [dateFilter, setDateFilter] = useState({ from: '', to: ''});
+  const handleAddManualExpense = (newExpense) => {
+    setTransactions(prev => [...prev, newExpense]);
+  };
+  const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
-    axios.get('/api/transactions')
+    axios.get('/api/transactions', { withCredentials: true })
       .then(res => {
         const txns = res.data.transactions;
         setTransactions(txns); //save full list
@@ -83,6 +88,13 @@ const Dashboard = () => {
             >
               Clear Filters
             </button>
+            {/* Add expense */}
+            <button
+              onClick={() => setShowAddForm(prev => !prev)}
+              className="add-expense-btn"
+            >
+              + Add Expense
+            </button>
         </div>
 
         {/* Charts */}
@@ -94,6 +106,25 @@ const Dashboard = () => {
         {/* Transaction Table */}
         <TransactionTable transactions={filteredTransactions} />
         <ChatBot />
+
+        {showAddForm && (
+          // Modal overlay: darken the background and center the form
+          <div className="modal-overlay"> 
+            <div className="modal-box">
+              <div className="modal-header">
+                <h2>Add Expense</h2>
+                <button onClick={() => setShowAddForm(false)} className="close-btn">✕</button>
+              </div>
+              <AddExpenseForm
+                onAdd={(expense) => {
+                  handleAddManualExpense(expense);
+                  setShowAddForm(false); // Close modal after submit
+                }}
+                categoryOptions={categoryOptions}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
