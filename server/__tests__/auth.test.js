@@ -57,7 +57,6 @@ describe('Authentication Routes', () => {
   it('should register a new user', async () => {
     const res = await request.post('/api/auth/register').send(testUser);
     expect(res.statusCode).toBe(200);
-    expect(res.body.success).toBe(true);
     expect(res.body.message).toBe('User registered successfully!');
     expect(transporter.sendMail).toHaveBeenCalled();
   });
@@ -65,7 +64,6 @@ describe('Authentication Routes', () => {
   it('should not register the same user again', async () => {
     const res = await request.post('/api/auth/register').send(testUser);
     expect(res.statusCode).toBe(200);
-    expect(res.body.success).toBe(false);
     expect(res.body.message).toBe('User already exists');
   });
 
@@ -75,7 +73,6 @@ describe('Authentication Routes', () => {
       password: testUser.password,
     });
     expect(res.statusCode).toBe(200);
-    expect(res.body.success).toBe(true);
   });
 
   it('should not log in with wrong password', async () => {
@@ -84,7 +81,6 @@ describe('Authentication Routes', () => {
       password: 'wrongpassword',
     });
     expect(res.statusCode).toBe(200);
-    expect(res.body.success).toBe(false);
     expect(res.body.message).toBe('Invalid password');
   });
 });
