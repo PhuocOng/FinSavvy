@@ -19,7 +19,7 @@ jest.mock('../config/nodemailer', () => ({
   sendMail: jest.fn().mockResolvedValue(true),
 }));
 
-describe('Auth Routes Status Check', () => {
+describe('Auth Routes', () => {
   const testUser = {
     name: 'Test User',
     email: 'testuser@example.com',
