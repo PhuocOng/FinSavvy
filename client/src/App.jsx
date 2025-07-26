@@ -11,7 +11,7 @@ import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Login from './pages/Login.jsx';
 import EmailVerify from './pages/EmailVerify.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
-import LandingPage from './pages/HomePage/Landingpage.jsx';
+import LandingPage from './pages/LandingPage/Landingpage.jsx';
 
 import { AppContent } from './context/AppContext.jsx';
 
