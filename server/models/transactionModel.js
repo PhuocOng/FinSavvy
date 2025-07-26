@@ -20,7 +20,7 @@ const TransactionSchema = new Schema({
     type: String,
     required: true,
     enum: [
-      'Food', 'Transport', 'Shopping', 'Entertainment', 
+      'Food', 'Transportation', 'Shopping', 'Entertainment', 
       'Health', 'Education', 'Bills', 'Others'
     ]
   },
@@ -28,6 +28,11 @@ const TransactionSchema = new Schema({
     type: Date,
     required: true,
   },
+  type: {
+    type: String,
+    enum: ['income', 'expense'],
+    required: true
+  }
 }, {
   timestamps: true,
 });
