@@ -8,6 +8,10 @@ const TransactionSchema = new Schema({
     required: true,
     ref: 'User',
   },
+  name: { 
+    type: String, 
+    required: true,
+  },
   amount: {
     type: Number,
     required: true,
@@ -23,9 +27,6 @@ const TransactionSchema = new Schema({
   date: {
     type: Date,
     required: true,
-  },
-  description: {
-    type: String,
   },
 }, {
   timestamps: true,
