@@ -34,7 +34,7 @@ const Dashboard = () => {
         // setCategoryOptions(categories) //show all list at first
 
         const categories = [
-          'Food', 'Transport', 'Shopping', 'Entertainment', 'Health', 'Education', 'Bills', 'Others'
+          'Food', 'Transportation', 'Shopping', 'Entertainment', 'Health', 'Education', 'Bills', 'Others'
         ];
         setCategoryOptions(categories);
       })
@@ -109,7 +109,21 @@ const Dashboard = () => {
         </div>
 
         {/* Transaction Table */}
-        <TransactionTable transactions={filteredTransactions} />
+        <TransactionTable transactions={filteredTransactions}
+          onDelete={(id) => {
+            axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/transactions/${id}`, {
+              withCredentials: true
+            })
+            .then(() => {
+              const updated = transactions.filter(t => t._id !== id);
+              setTransactions(updated);
+            })
+            .catch(err => {
+              console.error('Error deleting transaction:', err);
+            });
+          }}
+        />
+
         <ChatBot />
 
         {showAddForm && (
