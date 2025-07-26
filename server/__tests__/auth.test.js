@@ -5,7 +5,7 @@ const request = supertest(app);
 // Extend timeout globally
 jest.setTimeout(30000);
 
-// 🧪 Mock OpenAI and Nodemailer to avoid real calls
+// Mock OpenAI and Nodemailer to avoid real calls
 jest.mock('../config/openai.config', () => ({
   chat: {
     completions: {
