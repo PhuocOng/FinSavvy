@@ -7,9 +7,9 @@ const Transaction = require("../models/transactionModel.js");
 const addManualExpense = async(req, res) => {
   try {
     const userId = req.user?.id;
-    const { name, amount, category, date } = req.body;
+    const { name, amount, category, date} = req.body;
 
-    if (!name || !amount || !category || !date || !type) {
+    if (!name || !amount || !category || !date) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
