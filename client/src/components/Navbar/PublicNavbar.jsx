@@ -5,8 +5,8 @@ const PublicNavbar = () => {
   return (
     <header className="flex justify-between items-center py-6 px-10 bg-white shadow w-full">
       {/* Logo */}
-      <Link to="/" className="font-bold text-xl text-black">
-        FinSavvy
+      <Link to="/" className="flex items-center gap-2">
+        <img src={assets.logo} alt='FinSavvy logo' className="w-36 h-auto object-contain" /> 
       </Link>
 
       {/* Nav Links */}

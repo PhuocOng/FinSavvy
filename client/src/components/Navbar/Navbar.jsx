@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppContent } from '../../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { assets } from '../../assets/assets';
 
 const Navbar = () => {
   const { userData, backendUrl, setUserData, setIsLoggedin } = useContext(AppContent);
@@ -26,8 +27,8 @@ const Navbar = () => {
     <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 font-sans">
       <header className="flex justify-between items-center text-black py-8 px-10 md:px-32 bg-white drop-shadow-md">
          {/* Logo */}
-         <Link to="/" className="font-bold text-xl text-black">
-         FinSavvy
+         <Link to="/" className="flex items-center gap-2">
+         <img src={assets.logo} alt='FinSavvy logo' className="w-36 h-auto object-contain" /> 
          </Link>
 
         {/* Nav Links */}
