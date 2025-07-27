@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import cardPayment from '../../assets/card-payment.png';
 import ChatBot from '../ChatBot/ChatBot';
+import Footer from '../../components/Footer';
 
 // Dummy Card Component with Motion
 const Card = ({ title, value, icon }) => (
@@ -75,14 +76,14 @@ const Homepage = () => {
       </motion.div>
 
       {/* Footer */}
-      <motion.footer
-        className="text-sm text-blue-700 text-center px-8 md:px-16 py-6"
+      <motion.div
+        className="mt-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1 }}
       >
-        © 2025 FinSavvy. All rights reserved.
-      </motion.footer>
+        <Footer />
+      </motion.div>
 
       {/* ChatBot Floating Toggle */}
       <ChatBot />

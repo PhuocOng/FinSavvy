@@ -56,12 +56,6 @@ button:focus-visible {
   :root {
     color: #213547;
   }
-  a:hover {
-    color: inherit;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 body {
   overscroll-behavior: none;

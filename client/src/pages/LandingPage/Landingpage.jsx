@@ -1,11 +1,13 @@
-import React from 'react';
+// LandingPage.jsx
+import React, { useContext, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import cardPayment from '../../assets/card-payment.png';
+import Footer from '../../components/Footer';
 
 const LandingPage = () => {
   return (
     <motion.div
-      className="w-full min-h-screen  bg-gradient-to-br from-blue-50 to-blue-100 text-white font-sans flex flex-col"
+      className="w-full min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 text-white font-sans flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -24,7 +26,7 @@ const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            Fast & Smart <br /> <span className="text-yellow-300">Personal Finance Assistant</span>
+            <span className="text-yellow-300">Take control of your money</span>
           </motion.h2>
 
           <motion.p
@@ -80,15 +82,15 @@ const LandingPage = () => {
         ))}
       </motion.div>
 
-      {/* Footer */}
-      <motion.footer
-        className="mt-20 text-sm text-gray-300 text-center px-8 md:px-20 py-10 border-t border-white/20"
+      {/* Reusable Footer */}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.8 }}
+        className="mt-20"
       >
-        © 2025 FinSavvy. All rights reserved.
-      </motion.footer>
+        <Footer />
+      </motion.div>
     </motion.div>
   );
 };

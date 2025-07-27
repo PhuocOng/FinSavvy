@@ -126,25 +126,33 @@ const Dashboard = () => {
 
         <ChatBot />
 
-        {showAddForm && (
-          // Modal overlay: darken the background and center the form
-          <div className="modal-overlay"> 
-            <div className="modal-box">
-              <div className="modal-header">
-                <h2>Add Expense</h2>
-                <button onClick={() => setShowAddForm(false)} className="close-btn">✕</button>
-              </div>
-              {/* {console.log("CATEGORY OPTIONS:", categoryOptions)} */}
-              <AddExpenseForm
-                onAdd={(expense) => {
-                  handleAddManualExpense(expense);
-                  setShowAddForm(false); // Close modal after submit
-                }}
-                categoryOptions={categoryOptions}
-              />
-            </div>
-          </div>
-        )}
+           {/* Add Expense Slide-In Right Panel */}
+            {showAddForm && (
+  <>
+    {/* Background Overlay */}
+    <div
+      className="overlay"
+      onClick={() => setShowAddForm(false)}
+    />
+
+    {/* Right Slide Panel */}
+    <div className="add-expense-panel show">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">Add Expense</h2>
+      </div>
+
+      <AddExpenseForm
+        onClose={() => setShowAddForm(false)}
+        onAdd={(expense) => {
+          handleAddManualExpense(expense);
+          setShowAddForm(false);
+        }}
+        categoryOptions={categoryOptions}
+      />
+    </div>
+  </>
+)}
+
       </div>
     </div>
   );
