@@ -4,6 +4,7 @@ import mail_icon from './mail_icon.svg'
 import person_icon from './person_icon.svg'
 import header_img from './header_img.png'
 import react from './react.svg'
+import logo from './logo.png'
 
 export const assets = {
     arrow_icon,
@@ -11,5 +12,6 @@ export const assets = {
     mail_icon,
     person_icon,
     header_img,
-    react
+    react,
+    logo
 }
