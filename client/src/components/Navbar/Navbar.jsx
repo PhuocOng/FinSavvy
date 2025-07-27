@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const { userData, backendUrl, setUserData, setIsLoggedin } = useContext(AppContent);
-  
+  const [showDropdown, setShowDropdown] = useState(false); // 👈 Add this line
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -25,19 +25,31 @@ const Navbar = () => {
   return (
     <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 font-sans">
       <header className="flex justify-between items-center text-black py-8 px-10 md:px-32 bg-white drop-shadow-md">
-         {/* Logo */}
-         <Link to="/" className="font-bold text-xl text-black">
-         FinSavvy
-         </Link>
+        <Link to="/" className="font-bold text-xl text-black">FinSavvy</Link>
 
-        {/* Nav Links */}
         <ul className="flex items-center gap-12 text-black font-semibold text-base">
-          <Link to="/" className="p-3 hover:bg-[#2563eb] hover:text-white rounded-md transition-all cursor-pointer">Home</Link>
+          <li><Link to="/" className="p-3 hover:bg-[#2563eb] hover:text-white rounded-md transition-all cursor-pointer">Home</Link></li>
 
           {userData && (
             <>
-              <Link to="/dashboard" className="p-3 hover:bg-[#2563eb] hover:text-white rounded-md transition-all cursor-pointer">Dashboard</Link>
-              <Link to="/" className="p-3 hover:bg-[#2563eb] hover:text-white rounded-md transition-all cursor-pointer">Setting</Link>
+              {/* Dashboard Dropdown */}
+              <li className="relative">
+                <button
+                  onClick={() => setShowDropdown((prev) => !prev)}
+                  className="p-3 hover:bg-[#2563eb] hover:text-white font-medium rounded-md transition-all cursor-pointer"
+                >
+                  Dashboard
+                </button>
+
+                {showDropdown && (
+                  <div className="absolute top-full left-0 mt-2 w-40 bg-white rounded shadow z-50">
+                    <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setShowDropdown(false)}>Overview</Link>
+                    <Link to="/dashboard/expenses" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setShowDropdown(false)}>Expenses</Link>
+                  </div>
+                )}
+              </li>
+
+              <li><Link to="/" className="p-3 hover:bg-[#2563eb] hover:text-white rounded-md transition-all cursor-pointer">Setting</Link></li>
             </>
           )}
         </ul>
@@ -48,7 +60,7 @@ const Navbar = () => {
           <input type="text" placeholder="Search..." className="py-2 pl-10 rounded-xl border-2 border-[#2563eb] focus:bg-slate-100 focus:outline-[#3b82f6]" />
         </div>
 
-        {/* Profile Avatar*/}
+        {/* Profile Avatar */}
         {userData && (
           <div className="flex justify-center items-center rounded-full bg-black text-white w-10 h-10 cursor-pointer relative group">
             {userData?.name?.[0].toUpperCase()}
