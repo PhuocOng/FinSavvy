@@ -50,7 +50,7 @@ const Navbar = () => {
 
         {/* Profile Avatar*/}
         {userData && (
-          <div className="flex justify-center items-center rounded-full bg-black text-white w-10 h-10 cursor-pointer relative group">
+          <div className="flex justify-center items-center rounded-full bg-[#F9E0E5] w-10 h-10 cursor-pointer relative group">
             {userData?.name?.[0].toUpperCase()}
             <div className="absolute hidden group-hover:block top-10 right-0 z-10 text-black rounded bg-gray-300 shadow-md">
               <ul className="list-none m-0 p-2 text-sm">
