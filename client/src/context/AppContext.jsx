@@ -13,6 +13,7 @@ const AppContextProvider = (props) => {
     
     const [isLoggedin, setIsLoggedin] = useState(false) // initially this user will be logged out
     const [userData, setUserData] = useState(false)
+    const [isLoading, setIsLoading] = useState(true);
 
     // call /is-auth -> check if user is already authenticated 
     const getAuthState = async () => {
@@ -37,36 +38,46 @@ const AppContextProvider = (props) => {
 
     // Fetch user info from backend (/api/user/data)
     const getUserData = async () => {
-  try {
-    const { data } = await axios.get(backendUrl + '/api/user/data', { withCredentials: true });
-    if (data.success) {
-      setUserData(data.userData);
-      console.log("User data loaded:", data.userData);
+    try {
+      const { data } = await axios.get(backendUrl + '/api/user/data', { withCredentials: true });
+      if (data.success) {
+        setUserData(data.userData);
+        localStorage.setItem("userData", JSON.stringify(data.userData));
+        console.log("User data loaded:", data.userData);
 
-      return true;
-    } else {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      const token = localStorage.getItem("token");
+      const message = error?.response?.data?.message;
+      if (token && message === "User not found") {
+        toast.error("User not found");
+      } else {
+        console.log("getUserData error:", message);
+      }
       return false;
     }
-  } catch (error) {
-    const token = localStorage.getItem("token");
-    const message = error?.response?.data?.message;
-    if (token && message === "User not found") {
-      toast.error("User not found");
-    } else {
-      console.log("getUserData error:", message);
-    }
-    return false;
-  }
-};
+  };
 
-    useEffect(() => {
-        getAuthState();
-    }, [])
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userData");
+
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+      setIsLoggedin(true);
+      setIsLoading(false); // ready to render app
+    } else {
+      getAuthState().finally(() => setIsLoading(false)); // always stop loading
+    }
+  }, []);
 
     const value = {
         backendUrl, 
         isLoggedin, setIsLoggedin,
-        userData, setUserData, getUserData 
+        userData, setUserData, getUserData,
+        isLoading, setIsLoading
     }
 
     return (
