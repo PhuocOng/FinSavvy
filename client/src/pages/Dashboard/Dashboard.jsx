@@ -10,7 +10,7 @@ import './Dashboard.css'; // Import the stylesheet
 // import { use } from '../../../../server/config/nodemailer';
 import ChatBot from '../ChatBot/ChatBot';
 import AddExpenseForm from '../../components/AddExpense/AddExpenseForm';
-import PlaidLink from '../Dashboard/PlaidLink';
+import PlaidLink from '../../components/Dashboard/PlaidLink';
 
 
 const Dashboard = () => {
