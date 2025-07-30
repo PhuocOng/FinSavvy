@@ -10,6 +10,7 @@ import './Dashboard.css'; // Import the stylesheet
 // import { use } from '../../../../server/config/nodemailer';
 import ChatBot from '../ChatBot/ChatBot';
 import AddExpenseForm from '../../components/AddExpense/AddExpenseForm';
+import PlaidLink from '../Dashboard/PlaidLink';
 
 
 const Dashboard = () => {
@@ -18,23 +19,25 @@ const Dashboard = () => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState('');
   const [dateFilter, setDateFilter] = useState({ from: '', to: ''});
-  const handleAddManualExpense = (newExpense) => {
-    setTransactions(prev => [...prev, newExpense]);
-  };
   const [showAddForm, setShowAddForm] = useState(false);
+  const [isBankLinked, setIsBankLinked] = useState(false);
 
-  useEffect(() => {
+  const fetchTransactions = () => {
     axios.get('/api/transactions', { withCredentials: true })
       .then(res => {
         const txns = res.data.transactions;
-        setTransactions(txns); //save full list
-        setFilteredTransactions(txns)
-
+        setTransactions(txns);
+        setFilteredTransactions(txns);
         const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
-        setCategoryOptions(categories) //show all list at first
+        setCategoryOptions(categories);
       })
       .catch(err => console.error('Error fetching transactions:', err));
-  }, []);
+  };
+
+  // Fetch transactions on initial load and after a successful Plaid link
+  useEffect(() => {
+    fetchTransactions();
+  }, [isBankLinked]); 
 
   useEffect(() => {
     let result = [...transactions];
@@ -58,6 +61,15 @@ const Dashboard = () => {
   const totalIncome = useMemo(() => filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
   const totalExpenses = useMemo(() => filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
   const netAmount = totalIncome - totalExpenses;
+
+  const handleAddManualExpense = (newExpense) => {
+    setTransactions(prev => [...prev, newExpense]);
+  };
+
+  const handleSuccessfulLink = () => {
+    alert("Bank account linked successfully! Fetching latest transactions.");
+    setIsBankLinked(prev => !prev); // Toggle state to trigger the useEffect hook for fetching data
+  };
 
   return (
     <div className="dashboard-container">
@@ -95,6 +107,7 @@ const Dashboard = () => {
             >
               + Add Expense
             </button>
+            <PlaidLink onLinkSuccess={handleSuccessfulLink} />
         </div>
 
         {/* Charts */}
