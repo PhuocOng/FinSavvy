@@ -9,8 +9,12 @@ const userSchema = new mongoose.Schema({
     verifyOtpExpireAt: { type: String, default: 0},
     isAccountVerified: { type: Boolean, default: false},
     resetOtp: { type: String, default: '' },
-    resetOtpExpireAt: { type: Number, default: 0 }
-})
+    resetOtpExpireAt: { type: Number, default: 0 },
+    plaidAccessToken: { type: String, required: false},
+    plaidItemId: { type: String, required: false},
+
+});
+
 
 const User =  mongoose.model.User || mongoose.model('User', userSchema);
 
