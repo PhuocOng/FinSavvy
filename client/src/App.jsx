@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,13 +11,15 @@ import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Login from './pages/Login.jsx';
 import EmailVerify from './pages/EmailVerify.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
-import LandingPage from './pages/HomePage/Landingpage.jsx';
+import LandingPage from './pages/LandingPage/Landingpage.jsx';
 
 import { AppContent } from './context/AppContext.jsx';
 
 function App() {
-  const { isLoggedin, userData } = useContext(AppContent);
+  const { isLoggedin, userData, isLoading } = useContext(AppContent);
   const location = useLocation();
+
+  if (isLoading) return null;
 
   // Show PublicNavbar only if user is not logged in and on landing page
   const isLandingPage = location.pathname === '/' && !isLoggedin;

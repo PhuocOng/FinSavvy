@@ -135,27 +135,50 @@ const Dashboard = () => {
         </div>
 
         {/* Transaction Table */}
-        <TransactionTable transactions={filteredTransactions} />
+        <TransactionTable transactions={filteredTransactions}
+          onDelete={(id) => {
+            axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/transactions/${id}`, {
+              withCredentials: true
+            })
+            .then(() => {
+              const updated = transactions.filter(t => t._id !== id);
+              setTransactions(updated);
+            })
+            .catch(err => {
+              console.error('Error deleting transaction:', err);
+            });
+          }}
+        />
+
         <ChatBot />
 
-        {showAddForm && (
-          // Modal overlay: darken the background and center the form
-          <div className="modal-overlay"> 
-            <div className="modal-box">
-              <div className="modal-header">
-                <h2>Add Expense</h2>
-                <button onClick={() => setShowAddForm(false)} className="close-btn">✕</button>
-              </div>
-              <AddExpenseForm
-                onAdd={(expense) => {
-                  handleAddManualExpense(expense);
-                  setShowAddForm(false); // Close modal after submit
-                }}
-                categoryOptions={categoryOptions}
-              />
-            </div>
-          </div>
-        )}
+           {/* Add Expense Slide-In Right Panel */}
+            {showAddForm && (
+  <>
+    {/* Background Overlay */}
+    <div
+      className="overlay"
+      onClick={() => setShowAddForm(false)}
+    />
+
+    {/* Right Slide Panel */}
+    <div className="add-expense-panel show">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">Add Expense</h2>
+      </div>
+
+      <AddExpenseForm
+        onClose={() => setShowAddForm(false)}
+        onAdd={(expense) => {
+          handleAddManualExpense(expense);
+          setShowAddForm(false);
+        }}
+        categoryOptions={categoryOptions}
+      />
+    </div>
+  </>
+)}
+
       </div>
     </div>
   );

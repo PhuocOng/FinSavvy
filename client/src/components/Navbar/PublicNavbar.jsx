@@ -5,8 +5,8 @@ const PublicNavbar = () => {
   return (
     <header className="flex justify-between items-center py-6 px-10 bg-white shadow w-full">
       {/* Logo */}
-      <Link to="/" className="font-bold text-xl text-black">
-        FinSavvy
+      <Link to="/" className="flex items-center gap-2">
+        <img src={assets.logo} alt='FinSavvy logo' className="w-36 h-auto object-contain" /> 
       </Link>
 
       {/* Nav Links */}
@@ -31,7 +31,7 @@ const PublicNavbar = () => {
       {/* Auth Buttons */}
       <div className="flex gap-4">
         <Link to="/login">
-          <button className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-black hover:bg-gray-100 transition-all">
+          <button className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-black hover:bg-gray-100 transition-all hover:text-indigo-600">
             Sign up
             <img src={assets.arrow_icon} alt="" />
           </button>
