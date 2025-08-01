@@ -10,6 +10,7 @@ import './Dashboard.css'; // Import the stylesheet
 // import { use } from '../../../../server/config/nodemailer';
 import ChatBot from '../ChatBot/ChatBot';
 import AddExpenseForm from '../../components/AddExpense/AddExpenseForm';
+import PlaidLink from '../../components/Dashboard/PlaidLink';
 
 
 const Dashboard = () => {
@@ -18,28 +19,25 @@ const Dashboard = () => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState('');
   const [dateFilter, setDateFilter] = useState({ from: '', to: ''});
-  const handleAddManualExpense = (newExpense) => {
-    setTransactions(prev => [...prev, newExpense]);
-  };
   const [showAddForm, setShowAddForm] = useState(false);
+  const [isBankLinked, setIsBankLinked] = useState(false);
 
-  useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/transactions`, { withCredentials: true })
+  const fetchTransactions = () => {
+    axios.get('/api/transactions', { withCredentials: true })
       .then(res => {
         const txns = res.data.transactions;
-        setTransactions(txns); //save full list
-        setFilteredTransactions(txns)
-
-        // const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
-        // setCategoryOptions(categories) //show all list at first
-
-        const categories = [
-          'Food', 'Transportation', 'Shopping', 'Entertainment', 'Health', 'Education', 'Bills', 'Others'
-        ];
+        setTransactions(txns);
+        setFilteredTransactions(txns);
+        const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
         setCategoryOptions(categories);
       })
       .catch(err => console.error('Error fetching transactions:', err));
-  }, []);
+  };
+
+  // Fetch transactions on initial load and after a successful Plaid link
+  useEffect(() => {
+    fetchTransactions();
+  }, [isBankLinked]); 
 
   useEffect(() => {
     let result = [...transactions];
@@ -63,6 +61,33 @@ const Dashboard = () => {
   const totalIncome = useMemo(() => filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
   const totalExpenses = useMemo(() => filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
   const netAmount = totalIncome - totalExpenses;
+
+  const handleAddManualExpense = (newExpense) => {
+    setTransactions(prev => [...prev, newExpense]);
+  };
+
+  const handleSuccessfulLink = async () => {
+    try {
+      alert("Bank account linked! Syncing transactions now...");
+
+      const authToken = localStorage.getItem('token');
+      
+      // Call your new backend route to sync transactions
+      await axios.post('/api/plaid/sync-transactions', {}, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+
+      alert("Sync complete!");
+
+      // Now, trigger your existing function to fetch data from YOUR database
+      // which will update the UI. We use setIsBankLinked to do this.
+      setIsBankLinked(prev => !prev);
+      
+    } catch (error) {
+      console.error("Failed to sync transactions", error);
+      alert("Could not sync transactions.");
+    }
+  };
 
   return (
     <div className="dashboard-container">
@@ -100,6 +125,7 @@ const Dashboard = () => {
             >
               + Add Expense
             </button>
+            <PlaidLink onLinkSuccess={handleSuccessfulLink} />
         </div>
 
         {/* Charts */}

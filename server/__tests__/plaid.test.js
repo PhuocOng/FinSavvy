@@ -1,26 +1,36 @@
-const mockPlaidClient = require('../mock/plaidClientMock');
-
-// Mock the actual plaidClient used in the service
-jest.mock('../services/plaidService', () => ({
-  plaidClient: mockPlaidClient
-}));
-
-const supertest = require('supertest');
+const request = require('supertest');
 const app = require('../app');
-const request = supertest(app);
+const plaidClient = require('../config/plaid');
+const User = require('../models/User');
+
+// Mock the plaid client from the correct file path
+jest.mock('../config/plaid');
+
+// Mock the User model to prevent database errors
+jest.mock('../models/User');
+
+// Mock the login middleware
+jest.mock('../middleware/auth', () => (req, res, next) => {
+  req.user = { id: 'mockUserId' };
+  next();
+});
 
 describe('Plaid Routes', () => {
-    it('POST /api/plaid/exchange_token -> 200', async () => {
-        const res = (await request.post('/api/plaid/exchange_token').send({
-            public_token: 'public-sandbox-abc123'
-        }));
-        expect(res.statusCode).toBe(200);
-    });
+  it('POST /api/plaid/create_link_token should return status 200', async () => {
+    plaidClient.linkTokenCreate.mockResolvedValue({ data: { link_token: 'fake-token' } });
 
-    it('GET /api/plaid/transactions -> 200', async () => {
-        const res = await request.get('/api/plaid/transactions').query({
-            access_token: 'mock_access_token'
-        });
-        expect(res.statusCode).toBe(200);
-    });
+    const res = await request(app).post('/api/plaid/create_link_token');
+    expect(res.statusCode).toBe(200);
+  });
+
+  it('POST /api/plaid/exchange_public_token should return status 200', async () => {
+    plaidClient.itemPublicTokenExchange.mockResolvedValue({ data: { access_token: 'fake-access-token' } });
+    User.findByIdAndUpdate.mockResolvedValue({});
+
+    const res = await request(app)
+      .post('/api/plaid/exchange_public_token')
+      .send({ public_token: 'fake-public-token' });
+
+    expect(res.statusCode).toBe(200);
+  });
 });
