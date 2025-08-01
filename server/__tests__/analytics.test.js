@@ -1,28 +1,39 @@
 const request = require('supertest');
-const app = require('../app');
+const express = require('express');
+const analyticsRouter = require('../routes/analytics');
 const Transaction = require('../models/transactionModel');
 
-// Mock the database model to prevent errors
 jest.mock('../models/transactionModel');
 
-// Mock the login middleware to simulate a logged-in user
-jest.mock('../middleware/auth', () => (req, res, next) => {
-  req.user = { id: 'mockUserId' }; // Pretend a user is logged in
+const app = express();
+app.use(express.json());
+
+// Mock middleware to simulate authenticated user
+app.use((req, res, next) => {
+  req.user = { id: 'mockUserId' };
   next();
 });
 
-describe('Analytics Routes', () => {
-  it('GET /api/analytics/category-summary should return status 200', async () => {
-    // Tell the fake database to return an empty array
-    Transaction.aggregate.mockResolvedValue([]);
+app.use('/api/analytics', analyticsRouter);
+
+describe('Analytics Controller', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('GET /api/analytics/category-summary returns 200', async () => {
+    Transaction.aggregate.mockResolvedValue([
+      { category: 'Food', totalAmount: 100 },
+    ]);
 
     const res = await request(app).get('/api/analytics/category-summary');
     expect(res.statusCode).toBe(200);
   });
 
-  it('GET /api/analytics/monthly-summary should return status 200', async () => {
-    // Tell the fake database to return an empty array
-    Transaction.aggregate.mockResolvedValue([]);
+  test('GET /api/analytics/monthly-summary returns 200', async () => {
+    Transaction.aggregate.mockResolvedValue([
+      { month: '2025-08', totalAmount: 200 },
+    ]);
 
     const res = await request(app).get('/api/analytics/monthly-summary');
     expect(res.statusCode).toBe(200);
