@@ -7,6 +7,6 @@ router.use(authMiddleware);
 
 router.post('/create_link_token', plaidController.createLinkToken);
 router.post('/exchange_public_token', plaidController.exchangePublicToken);
-router.get('/transactions', plaidController.getTransactions);
+router.post('/sync-transactions', authMiddleware, plaidController.syncTransactions);
 
 module.exports=router;

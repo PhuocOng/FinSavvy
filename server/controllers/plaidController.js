@@ -1,5 +1,6 @@
 const plaidClient = require('../config/plaid');
 const User = require('../models/User');
+const Transaction = require('../models/transactionModel');
 
 // Create a link_token for the client to use
 const createLinkToken = async (req, res) => {
@@ -48,31 +49,42 @@ const exchangePublicToken = async (req, res) => {
   }
 };
 
-// GET /api/plaid/transactions
-const getTransactions = async (req, res) => {
-  const { access_token } = req.query;
-
-  if (!access_token) {
-    return res.status(400).json({ error: 'Missing access_token' });
-  }
-
-  // change the hardcode later
-  const startDate = '2024-01-01'; 
-  const endDate = '2024-12-31';
-
+const syncTransactions = async (req, res) => {
   try {
-    const response = await plaidClient.transactionsGet({
-      access_token,
-      start_date: startDate,
-      end_date: endDate,
-      options: { count: 100, offset: 0 },
-    });
+    const user = await User.findById(req.user.id);
+    if (!user || !user.plaidAccessToken) {
+      return res.status(400).json({ error: 'User has not linked a bank account.' });
+    }
 
-    res.json(response.data);
+    const accessToken = user.plaidAccessToken;
+    const plaidRequest = { access_token: accessToken };
+
+    const plaidResponse = await plaidClient.transactionsSync(plaidRequest);
+    const plaidTransactions = plaidResponse.data.added;
+
+    for (const plaidTx of plaidTransactions) {
+      // Use findOneAndUpdate with upsert to avoid creating duplicate transactions
+      await Transaction.findOneAndUpdate(
+        { transactionId: plaidTx.transaction_id }, // Condition to find existing doc
+        { // Data to insert or update
+          userId: user._id,
+          transactionId: plaidTx.transaction_id,
+          name: plaidTx.name,
+          amount: plaidTx.amount,
+          date: new Date(plaidTx.date),
+          category: plaidTx.personal_finance_category?.primary || 'Other',
+          type: plaidTx.amount > 0 ? 'income' : 'expense',
+        },
+        { upsert: true } // Option to create a new doc if none is found
+      );
+    }
+
+    res.status(200).json({ message: 'Transactions synced successfully.' });
+
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch transactions' });
+    console.error('Failed to sync Plaid transactions', error);
+    res.status(500).json({ error: 'Failed to sync transactions' });
   }
 };
 
-
-module.exports = { createLinkToken, exchangePublicToken, getTransactions };
+module.exports = { createLinkToken, exchangePublicToken, syncTransactions };
