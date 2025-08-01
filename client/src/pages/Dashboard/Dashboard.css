@@ -192,25 +192,29 @@
 .close-btn:hover {
   color: #000;
 }
+
 .add-expense-panel {
   position: fixed;
   top: 0;
   right: 0;
   width: 100%;
-  max-width: 500px; /* ← Change this from 500px to a larger value */
-  height: 100%;
-  background: white;
+  max-width: 480px;
+  height: 100vh;
+  background-color: white;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
-  padding: 2rem 2rem 3rem; 
-  overflow-y: auto;
-  transform: translateX(100%);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  overflow: hidden; /* Important: prevent double scroll */
   transition: transform 0.3s ease-in-out;
-  justify-content: center;
-  flex: content;
+  transform: translateX(0); /* Already showing */
 }
-.add-expense-panel.show {
-  transform: translateX(0%);
+
+/* Inner scroll area inside AddExpenseForm */
+.add-expense-form {
+  flex: 1;
+  overflow-y: auto;
 }
 
 

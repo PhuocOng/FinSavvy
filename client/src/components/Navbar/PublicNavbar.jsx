@@ -31,7 +31,7 @@ const PublicNavbar = () => {
       {/* Auth Buttons */}
       <div className="flex gap-4">
         <Link to="/login">
-          <button className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-black hover:bg-gray-100 transition-all hover:text-indigo-600">
+          <button className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-black hover:bg-gray-100 transition-all ">
             Sign up
             <img src={assets.arrow_icon} alt="" />
           </button>

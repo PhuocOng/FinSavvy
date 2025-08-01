@@ -161,21 +161,24 @@ const Dashboard = () => {
       onClick={() => setShowAddForm(false)}
     />
 
-    {/* Right Slide Panel */}
     <div className="add-expense-panel show">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Add Expense</h2>
       </div>
 
-      <AddExpenseForm
-        onClose={() => setShowAddForm(false)}
-        onAdd={(expense) => {
-          handleAddManualExpense(expense);
-          setShowAddForm(false);
-        }}
-        categoryOptions={categoryOptions}
-      />
+      {/* Scrollable form area */}
+      <div className="add-expense-form">
+        <AddExpenseForm
+          onClose={() => setShowAddForm(false)}
+          onAdd={(expense) => {
+            handleAddManualExpense(expense);
+            setShowAddForm(false);
+          }}
+          categoryOptions={categoryOptions}
+        />
+      </div>
     </div>
+
   </>
 )}
 

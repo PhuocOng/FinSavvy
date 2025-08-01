@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { FaArrowLeft } from 'react-icons/fa';
 import 'react-datepicker/dist/react-datepicker.css';
+import './AddExpense.css';
 
 const ExpenseForm = ({
   name,
@@ -15,33 +16,33 @@ const ExpenseForm = ({
   onBack
 }) => {
   return (
-    <div className="bg-white w-full max-w-sm mx-auto h-full flex flex-col p-6">
+    <div className="expense-form-container">
       {/* Header */}
-      <div className="flex gap-4 mb-6">
-        <button onClick={onBack} className="text-xl text-gray-700 hover:text-black">
+      <div className="expense-form-header">
+        <button onClick={onBack} className="back-button">
           <FaArrowLeft />
         </button>
-        <h2 className="text-lg font-semibold text-gray-800">Add Expense</h2>
+        <h2 className="expense-form-title">Add Expense</h2>
       </div>
 
-      {/* Form Content */}
-      <div className="flex-1 overflow-y-auto space-y-6">
+      {/* Inputs */}
+      <div className="expense-form-body">
         {/* Name Input */}
-        <div>
-          <label className="block text-sm text-gray-500 mb-1">Description</label>
+        <div className="expense-form-name">
+          <label className="expense-form-label">Description</label>
           <input
             type="text"
             placeholder="e.g. Grocery shopping"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="expense-form-input"
             required
           />
         </div>
 
         {/* Date Picker */}
-        <div>
-          <label className="block text-sm text-gray-500 mb-1">Date</label>
+        <div className="expense-form-date">
+          <label className="expense-form-date-label">Date</label>
           <DatePicker
             selected={date}
             onChange={(d) => setDate(d)}
@@ -49,7 +50,7 @@ const ExpenseForm = ({
             customInput={
               <button
                 type="button"
-                className="w-full px-4 py-2 border rounded-md text-left bg-white hover:bg-gray-50"
+                className="expense-form-date-button"
               >
                 {date.toISOString().slice(0, 10)}
               </button>
@@ -58,12 +59,12 @@ const ExpenseForm = ({
         </div>
 
         {/* Category Dropdown */}
-        <div>
-          <label className="block text-sm text-gray-500 mb-1">Category</label>
+        <div className="expense-form-category">
+          <label className="expense-form-category-label">Category</label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="expense-form-category-select"
             required
           >
             <option value="">-- Select a category --</option>
@@ -80,12 +81,8 @@ const ExpenseForm = ({
       <button
         type="button"
         onClick={onNext}
-        disabled={!name || !category}
-        className={`w-full mt-6 py-3 rounded-full text-white font-semibold text-base transition ${
-          name && category
-            ? 'bg-blue-50 hover: bg-blue-100 '
-            : 'bg-gray-300 cursor-not-allowed'
-        }`}
+        disabled={!name || !category || !date}
+        className={`expense-form-review-button ${name && category && date ? 'enabled' : 'disabled'}`}
       >
         Review
       </button>

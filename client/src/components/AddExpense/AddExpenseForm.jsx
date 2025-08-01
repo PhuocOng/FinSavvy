@@ -40,12 +40,12 @@ const AddExpenseForm = ({ onAdd, categoryOptions, onClose }) => {
   };
 
   return (
-      <form onSubmit={handleSubmit} className="add-expense-form space-y-6 h-full">
+      <form onSubmit={handleSubmit} className="add-expense-form">
     {confirmed && (
       <div className="text-green-600 font-medium">✅ Expense added successfully!</div>
     )}
 
-    <div className="add-expense-panel show flex flex-col justify-between h-full">
+    <div className="add-expense-panel show">
       {step === 1 && (
         <AmountEntry 
         amount={amount} 
