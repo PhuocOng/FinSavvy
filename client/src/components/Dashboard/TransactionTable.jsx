@@ -30,8 +30,9 @@ const TransactionTable = ({ transactions, onDelete }) => (
                   day: 'numeric',
                 })}
               </td>
-              <td className="py-3 px-4 text-blue-800">${txn.amount.toFixed(2)}</td>
-              <td className="py-3 px-4 text-blue-800">{txn.category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
+              <td className="py-3 px-4 text-blue-800 text-center">${txn.amount.toFixed(2)}</td>
+              <td className="py-3 px-4 text-blue-800 text-center">{txn.category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
+              <td className="py-3 px-4 text-red-600 cursor-pointer text-center"><button onClick={() => onDelete(txn._id)}>🗑️</button></td>
             </tr>
           ))}
         </tbody>
