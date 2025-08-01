@@ -1,0 +1,387 @@
+
+
+/* General layout for form step */
+.add-expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+}
+
+/* Wrapper for entire step panel */
+.add-expense-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Text utility */
+.text-green-600 {
+  color: #16a34a;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.show {
+  display: block;
+}
+
+/* --------------------- */
+/* Amount Entry Styling  */
+/* --------------------- */
+
+.amount-entry-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 1.5rem;
+  background-color: #fff;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.amount-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.amount-entry-display {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.amount-entry-title {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.amount-entry-value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.amount-entry-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 22rem;
+  margin: 0 auto 2rem;
+}
+
+.amount-entry-button {
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.amount-entry-button:hover {
+  background-color: #e5e7eb;
+}
+
+.amount-entry-button:active {
+  transform: scale(0.95);
+}
+
+.amount-entry-next {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.amount-entry-next-enabled {
+  background-color: #3b82f6;
+}
+
+.amount-entry-next-enabled:hover {
+  background-color: #2563eb;
+}
+
+.amount-entry-next-disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* ------------------------- */
+/* Confirm Expense Step      */
+/* ------------------------- */
+
+.confirm-expense-container.full-height-centered {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  max-width: 28rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: white;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+  
+.confirm-expense-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.confirm-expense-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #6b7280; 
+  margin-bottom: 0.25rem;
+}
+.confirm-expense-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.confirm-expense-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.confirm-expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+}
+
+.confirm-expense-item:hover {
+  background-color: #f3f4f6;
+}
+.confirm-expense-item:last-child {
+  border-bottom: none;
+}
+.confirm-expense-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}      
+.confirm-expense-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111827;
+}
+.chevron-icon {
+  color: #9ca3af;
+}
+
+.confirm-expense-submit {
+  width: 100%;
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.confirm-expense-submit:hover {
+  background-color: #2563eb;
+}
+
+/* --------------------------- */
+/* Text & Category Form Step   */
+/* --------------------------- */
+
+
+.expense-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 1.5rem;
+  background-color: #fff;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.expense-form-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem; /* ✅ This adds space below the title */
+}
+
+.expense-form-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.expense-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.expense-form-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem; /* ✅ corrected from 1 rem */
+}
+.expense-form-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.expense-form-input {
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: white;
+}
+.expense-form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+.expense-form-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.expense-form-date-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.expense-form-date-picker {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: white;
+}
+.expense-form-date-picker:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+.expense-form-date-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: white;
+  margin-bottom: 1rem; /* ✅ consistent spacing between fields */
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.expense-form-date-button:hover {
+  background-color: #f3f4f6;
+}
+.expense-form-category {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.expense-form-category-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.expense-form-category-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: white;
+}
+.expense-form-category-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+.expense-form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: white;
+  height: 100px; /* Adjust height as needed */
+}
+.expense-form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.expense-form-review-button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.expense-form-review-button.enabled {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.expense-form-review-button.enabled:hover {
+  background-color: #2563eb;
+}
+
+.expense-form-review-button.disabled {
+  background-color: #d1d5db;
+  color: white;
+  cursor: not-allowed;
+}
+
+/* Optional: Hide scrollbars for a cleaner UI */
+.expense-form-container::-webkit-scrollbar,
+.confirm-expense-container::-webkit-scrollbar,
+.amount-entry-container::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}

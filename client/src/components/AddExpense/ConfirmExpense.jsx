@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaArrowLeft, FaChevronRight } from 'react-icons/fa';
+import './AddExpense.css';
 
 const ConfirmExpense = ({
   name,
@@ -11,76 +12,68 @@ const ConfirmExpense = ({
   onEdit,
 }) => {
   return (
-    <div className="bg-white w-full max-w-sm mx-auto h-full flex flex-col justify-between p-6">
+    <div className="confirm-expense-container full-height-centered">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <button onClick={onBack} className="text-gray-600 hover:text-black text-xl">
+      <div className="confirm-expense-header">
+        <button onClick={onBack} className="back-button">
           <FaArrowLeft />
         </button>
-        <h2 className="text-lg font-semibold text-gray-800">Confirm details</h2>
+        <h2 className="confirm-expense-title">Confirm details</h2>
       </div>
 
-      {/* Detail Items */}
-      <div className="space-y-6 flex-1 overflow-y-auto">
-        {/* Amount */}
-        <div
-          onClick={() => onEdit('amount')}
-          className="flex justify-between items-center cursor-pointer border-b pb-4"
-        >
+      {/* Main Content */}
+      <div className="confirm-expense-details">
+        <div onClick={() => onEdit('amount')} className="confirm-expense-item">
           <div>
-            <div className="text-sm text-gray-500">Amount</div>
-            <div className="text-base font-medium">${amount}</div>
+            <div className="confirm-expense-label">Amount</div>
+            <div className="confirm-expense-value">${amount}</div>
           </div>
-          <FaChevronRight className="text-gray-400" />
+          <FaChevronRight className="chevron-icon" />
         </div>
 
-        {/* Name */}
-        <div
-          onClick={() => onEdit('name')}
-          className="flex justify-between items-center cursor-pointer border-b pb-4"
-        >
+        <div onClick={() => onEdit('name')} className="confirm-expense-item">
           <div>
-            <div className="text-sm text-gray-500">Description</div>
-            <div className="text-base font-medium">{name || '—'}</div>
+            <div className="confirm-expense-label">Description</div>
+            <div className="confirm-expense-value">{name || '—'}</div>
           </div>
-          <FaChevronRight className="text-gray-400" />
+          <FaChevronRight className="chevron-icon" />
         </div>
 
-        {/* Category */}
-        <div
-          onClick={() => onEdit('category')}
-          className="flex justify-between items-center cursor-pointer border-b pb-4"
-        >
+        <div onClick={() => onEdit('category')} className="confirm-expense-item">
           <div>
-            <div className="text-sm text-gray-500">Category</div>
-            <div className="text-base font-medium">{category || '—'}</div>
+            <div className="confirm-expense-label">Category</div>
+            <div className="confirm-expense-value">{category || '—'}</div>
           </div>
-          <FaChevronRight className="text-gray-400" />
+          <FaChevronRight className="chevron-icon" />
         </div>
 
-        {/* Date */}
-        <div
-          onClick={() => onEdit('date')}
-          className="flex justify-between items-center cursor-pointer border-b pb-4"
-        >
+        <div onClick={() => onEdit('date')} className="confirm-expense-item">
           <div>
-            <div className="text-sm text-gray-500">Date</div>
-            <div className="text-base font-medium">
-              {date?.toISOString().slice(0, 10)}
+            <div className="confirm-expense-label">Date</div>
+            <div className="confirm-expense-value">
+              {date
+                ? new Date(date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                : '—'}
             </div>
           </div>
-          <FaChevronRight className="text-gray-400" />
+          <FaChevronRight className="chevron-icon" />
         </div>
       </div>
 
-      {/* Submit Button */}
-      <button
-        type="submit"
-        onClick={onSubmit}
-        className="mt-6 w-full bg-blue-50 hover: bg-blue-100 text-white py-3 rounded-full font-semibold text-base"
-      >
-        Create ${amount} expense
-      </button>
+      {/* Footer */}
+      <div className="confirm-expense-footer">
+        <button
+          type="submit"
+          onClick={onSubmit}
+          className="confirm-expense-submit"
+        >
+          Create ${amount} expense
+        </button>
+      </div>
     </div>
   );
 };
