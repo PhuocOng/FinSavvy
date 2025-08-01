@@ -66,9 +66,27 @@ const Dashboard = () => {
     setTransactions(prev => [...prev, newExpense]);
   };
 
-  const handleSuccessfulLink = () => {
-    alert("Bank account linked successfully! Fetching latest transactions.");
-    setIsBankLinked(prev => !prev); // Toggle state to trigger the useEffect hook for fetching data
+  const handleSuccessfulLink = async () => {
+    try {
+      alert("Bank account linked! Syncing transactions now...");
+
+      const authToken = localStorage.getItem('token');
+      
+      // Call your new backend route to sync transactions
+      await axios.post('/api/plaid/sync-transactions', {}, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+
+      alert("Sync complete!");
+
+      // Now, trigger your existing function to fetch data from YOUR database
+      // which will update the UI. We use setIsBankLinked to do this.
+      setIsBankLinked(prev => !prev);
+      
+    } catch (error) {
+      console.error("Failed to sync transactions", error);
+      alert("Could not sync transactions.");
+    }
   };
 
   return (

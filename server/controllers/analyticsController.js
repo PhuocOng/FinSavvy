@@ -1,32 +1,17 @@
-const fs = require('fs');
-const path = require('path');
+const Transaction = require("../models/transactionModel.js");
 
-const getPlaidTransactions = () => {
-  const filePath = path.join(__dirname, '../mock/plaid_transaction.json');
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
-  const data = JSON.parse(fileContent);
-  return data.transactions; // Return only the transactions array
-};
-
-const getCategorySummary = (req, res) => {
+const getCategorySummary = async (req, res) => {
   try {
-    const transactions = getPlaidTransactions();
+    const userId = req.user.id;
 
-    const summaryMap = {};
-
-    transactions.forEach(tx => {
-      const category = tx.personal_finance_category?.primary || "Uncategorized";
-
-      if (!summaryMap[category]) {
-        summaryMap[category] = 0;
-      }
-      summaryMap[category] += tx.amount;
-    });
-
-    const summary = Object.keys(summaryMap).map(category => ({
-      category,
-      totalAmount: summaryMap[category],
-    }));
+    const summary = await Transaction.aggregate([
+      // 1. Find transactions for the current user
+      { $match: { userId: userId, type: 'expense' } },
+      // 2. Group them by category and sum up the amounts
+      { $group: { _id: "$category", totalAmount: { $sum: "$amount" } } },
+      // 3. Format the output
+      { $project: { _id: 0, category: "$_id", totalAmount: 1 } }
+    ]);
 
     res.status(200).json(summary);
   } catch (error) {
@@ -35,31 +20,19 @@ const getCategorySummary = (req, res) => {
   }
 };
 
-const getMonthlySummary = (req, res) => {
+const getMonthlySummary = async (req, res) => {
   try {
+    const userId = req.user.id;
 
-    const transactions = getPlaidTransactions();
-
-    const summaryMap = {};
-
-    transactions.forEach(tx => {
-      if (!tx.date) return;
-
-      const dateObj = new Date(tx.date);
-      const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
-
-      if (!summaryMap[monthKey]) {
-        summaryMap[monthKey] = 0;
-      }
-      summaryMap[monthKey] += tx.amount;
-    });
-
-    const summary = Object.keys(summaryMap)
-      .sort()
-      .map(month => ({
-        month,
-        totalAmount: summaryMap[month],
-      }));
+    const summary = await Transaction.aggregate([
+      // 1. Find transactions for the current user
+      { $match: { userId: userId, type: 'expense' } },
+      // 2. Group by month and sum amounts
+      { $group: { _id: { $dateToString: { format: "%Y-%m", date: "$date" } }, totalAmount: { $sum: "$amount" } } },
+      // 3. Sort by month and format the output
+      { $sort: { _id: 1 } },
+      { $project: { _id: 0, month: "$_id", totalAmount: 1 } }
+    ]);
 
     res.status(200).json(summary);
   } catch (error) {
