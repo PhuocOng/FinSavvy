@@ -23,11 +23,15 @@ const TransactionTable = ({ transactions, onDelete }) => (
           {transactions.map((txn) => (
             <tr key={txn._id} className="border-b border-blue-50 hover:bg-blue-25 transition-colors">
               <td className="py-3 px-4 text-blue-800">{txn.name.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
-              {/* <td className="py-3 px-4 text-blue-800">{txn.date}</td>  */}
-              <td className="py-3 px-4 text-blue-800 text-center">{new Date(txn.date).toISOString().slice(0, 10)}</td>
-              <td className="py-3 px-4 text-blue-800 text-center">${txn.amount.toFixed(2)}</td>
-              <td className="py-3 px-4 text-blue-800 text-center">{txn.category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
-              <td className="py-3 px-4 text-red-600 cursor-pointer text-center"><button onClick={() => onDelete(txn._id)}>🗑️</button></td>
+              <td className="py-3 px-4 text-blue-800">
+                {new Date(txn.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </td>
+              <td className="py-3 px-4 text-blue-800">${txn.amount.toFixed(2)}</td>
+              <td className="py-3 px-4 text-blue-800">{txn.category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
             </tr>
           ))}
         </tbody>

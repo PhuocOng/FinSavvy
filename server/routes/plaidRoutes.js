@@ -1,12 +1,12 @@
 const express = require('express');
-const {
-  exchangeToken,
-  getTransactions,
-} = require("../controllers/plaidController.js");
-
 const router = express.Router();
+const plaidController = require('../controllers/plaidController');
+const authMiddleware = require('../middleware/auth');
 
-router.post("/exchange_token", exchangeToken);
-router.get("/transactions", getTransactions);
+router.use(authMiddleware);
+
+router.post('/create_link_token', plaidController.createLinkToken);
+router.post('/exchange_public_token', plaidController.exchangePublicToken);
+router.post('/sync-transactions', authMiddleware, plaidController.syncTransactions);
 
 module.exports=router;
