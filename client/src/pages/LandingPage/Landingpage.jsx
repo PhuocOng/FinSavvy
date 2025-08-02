@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 const LandingPage = () => {
   return (
     <motion.div
-      className="w-full min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 text-white font-sans flex flex-col"
+      className="w-full min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 text-black font-sans flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -30,7 +30,7 @@ const LandingPage = () => {
           </motion.h2>
 
           <motion.p
-            className="text-lg md:text-xl text-gray-200 mb-8"
+            className="text-lg md:text-xl text-black mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -75,9 +75,9 @@ const LandingPage = () => {
               visible: { opacity: 1, y: 0 },
             }}
           >
-            <h3 className="text-3xl font-bold text-yellow-300 mb-2">{feature.number}</h3>
+            <h3 className="text-3xl font-bold text-black mb-2">{feature.number}</h3>
             <p className="text-xl font-semibold mb-2">{feature.title}</p>
-            <p className="text-gray-200 text-sm">{feature.desc}</p>
+            <p className="text-black text-sm">{feature.desc}</p>
           </motion.div>
         ))}
       </motion.div>
