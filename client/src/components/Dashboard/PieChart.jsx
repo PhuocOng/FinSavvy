@@ -7,14 +7,17 @@ const PieChart = ({ data }) => {
   const pieChartData = useMemo(() => {
     const categoryTotals = {};
     data
-      .filter(t => t.category)
+      .filter(t => t.type === 'expense' && t.category)
       .forEach(transaction => {
-        categoryTotals[transaction.category] = (categoryTotals[transaction.category] || 0) + transaction.amount;
+        const amt = Math.abs(+transaction.amount || 0);
+        categoryTotals[transaction.category] = (categoryTotals[transaction.category] || 0) + amt;
       });
-    return Object.entries(categoryTotals).map(([category, amount]) => ({
+    const result = Object.entries(categoryTotals).map(([category, amount]) => ({
       name: category,
       value: amount
     }));
+    console.log("Pie chart data:", result);
+    return result;
   }, [data]);
 
   return (
