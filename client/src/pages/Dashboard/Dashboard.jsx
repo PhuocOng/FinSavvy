@@ -24,8 +24,9 @@ const Dashboard = () => {
   const fetchTransactions = useCallback(() => {
     axios.get('/api/transactions', { withCredentials: true })
       .then(res => {
-        const txns = res.data.transactions;
+        const txns = Array.isArray(res?.data?.transactions) ? res.data.transactions : [];
         setTransactions(txns);
+        
         const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
         setCategoryOptions(categories);
       })
