@@ -1,5 +1,4 @@
 // Logic for each route (auth, gpt, transactions)
-
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
@@ -25,12 +24,12 @@ const register = async(req, res) => {
 
         await user.save();
 
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'}); 
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
 
         res.cookie('token', token,  {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', 
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -56,16 +55,7 @@ const register = async(req, res) => {
             text: `Welcome to FinSavvy. Your account has just been created with email id: ${email}`
         };
 
-        // // Sending welcome email
-        // const mailOptions = {
-        //     from: process.env.SENDER_EMAIL,
-        //     to: email, 
-        //     subject: 'Welcome to FinSavvy',
-        //     text: `Welcome to FinSavvy. Your account has just been created with email id: ${email}`
-        // }
-
         await transporter.sendMail(welcomeMailOptions);
-
        
         return res.json({
             success: true,
@@ -102,12 +92,12 @@ const login = async(req, res) => {
             return res.json({ success: false, message: "Invalid password"})
         }
 
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'}); 
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
 
         res.cookie('token', token,  {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', 
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -122,7 +112,7 @@ const login = async(req, res) => {
                 isAccountVerified: user.isAccountVerified,
       },
     });
-        
+       
     } catch (error) {
         res.json({success:false, message:error.message})
     }
@@ -137,7 +127,7 @@ const logout = async (req, res) => {
         })
 
         return res.json({success: true, message: 'Logged Out'})
-        
+       
     } catch (error) {
         res.json({success:false, message:error.message})
     }
@@ -163,7 +153,7 @@ const sendVerifyOtp = async (req, res) => {
         // Sending welcome email
         const mailOption = {
             from: process.env.SENDER_EMAIL,
-            to: user.email, 
+            to: user.email,
             subject: 'Account Verification OTP',
             text: `Your OTP is ${otp}. Verify your account using this OTP`, html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}", user.email)
         }
@@ -199,23 +189,47 @@ const verifyEmail = async (req, res) => {
 
         if(user.verifyOtpExpireAt < Date.now()) {
             return res.json({success: false, message: 'OTP Expired'});
-        }     
-        
+        }    
+       
         user.isAccountVerified = true;
         user.verifyOtp = '';
         user.verifyOtpExpireAt = 0;
 
         await user.save();
         return res.json({success: true, message: 'Email verified successfully'})
-        
+       
     } catch (error) {
         res.json({success:false, message:error.message})
     }
 }
-// Check if user is authenticated
+
 const isAuthenticated = async (req, res) => {
     try {
-        return res.json({success: true})
+        // guest
+        if (req.user.userType === "guest"){
+            return res.json({
+                success: true,
+                user: {
+                    name: "Guest",
+                    isGuest: true
+                }
+            })
+        }
+
+        // real user
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        return res.json({
+            success: true,
+            user: {
+                name: user.name,
+                email: user.email,
+                isAccountVerified: user.isAccountVerified,
+                isGuest: false
+            }
+        });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
@@ -247,7 +261,7 @@ const sendResetOtp = async (req, res) => {
         // Sending welcome email
         const mailOption = {
             from: process.env.SENDER_EMAIL,
-            to: user.email, 
+            to: user.email,
             subject: 'Password Reset OTP',
             text: `Your OTP for resetting password is ${otp}. Use this OTP to proceed with resetting your password.`, html: PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace("{{password}}", user.password)
         }
@@ -255,7 +269,7 @@ const sendResetOtp = async (req, res) => {
         await transporter.sendMail(mailOption)
 
         return res.json({success: true, message: "OTP sent to your email"})
-        
+       
     } catch (error) {
         return res.json({success: false, message: "Email is required"})
     }
@@ -290,7 +304,6 @@ const resetPassword = async (req, res) => {
         user.resetOtpExpireAt = 0;
 
         await user.save()
-
         return res.json({success: true, message: "Password has been reset successfully"});
 
     } catch (error) {
@@ -298,4 +311,25 @@ const resetPassword = async (req, res) => {
     }
 }
 
-module.exports = {register, login, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword};
+const guestLogin = async (req, res) => {
+    try {
+        const guestPayload = {
+            userType: "guest",
+            createdAt: new Date()
+        }
+
+        const token = jwt.sign(guestPayload, process.env.JWT_SECRET, {
+            expiresIn: "7d"
+        })
+
+        return res.json({
+            success: true,
+            message: "Guest login successful",
+            token,
+        });
+    } catch (error) {
+        return res.json({ success: false, message: error.message });
+    }
+}
+
+module.exports = {register, login, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword, guestLogin};

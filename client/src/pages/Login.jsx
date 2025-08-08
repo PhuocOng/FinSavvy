@@ -14,15 +14,37 @@ const Login = () => {
 
 
   const navigate = useNavigate();
-  const { backendUrl, setIsLoggedin, getUserData } = useContext(AppContent);
-
+  const { backendUrl, setIsLoggedin, getUserData, setUserData } = useContext(AppContent);
 
   axios.defaults.withCredentials = true;
 
+  const handleGuestLogin = async () => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/auth/guest`);
+
+
+      if (data.success){
+        const guestData = { name: 'Guest', isGuest: true };
+        localStorage.setItem("token", data.token);
+        setUserData(guestData);
+
+
+        localStorage.setItem("userData", JSON.stringify(guestData));
+
+
+        setIsLoggedin(true)
+        await getUserData();
+        navigate('/')
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Guest login failed");
+    }
+  }
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-
 
     try {
       if (state === 'Sign Up') {
@@ -144,6 +166,14 @@ const Login = () => {
               </span>
             </>
           )}
+
+          <span
+            onClick={handleGuestLogin}
+            className='text-blue-500 cursor-pointer underline block mt-2 hover:text-blue-700'
+          >
+            Continue as Guest
+          </span>
+
         </p>
       </div>
     </div>

@@ -1,6 +1,6 @@
 // Express routes: /auth, /gpt, /transactions
 const express = require("express");
-const { login, register, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword } = require("../controllers/authController");
+const { login, register, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword, guestLogin } = require("../controllers/authController");
 const userAuth = require("../middleware/auth");
 
 const authRouter = express.Router();
@@ -13,5 +13,6 @@ authRouter.post('/verify-account', userAuth, verifyEmail);
 authRouter.get('/is-auth', userAuth, isAuthenticated); // to check if user is logged in (doesnt change anything on server)
 authRouter.post('/send-reset-otp', sendResetOtp);
 authRouter.post('/reset-password', resetPassword);
+authRouter.post('/guest', guestLogin);
 
 module.exports = authRouter;
