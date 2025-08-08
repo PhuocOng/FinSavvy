@@ -26,6 +26,7 @@ const Navbar = () => {
   return (
     <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 font-sans">
       <header className="flex justify-between items-center text-black py-8 px-10 md:px-32 bg-white drop-shadow-md">
+        <Link to="/" className="font-bold text-xl text-black">FinSavvy</Link>
          {/* Logo */}
          <Link to="/" className="flex items-center gap-2">
          <img src={assets.logo} alt='FinSavvy logo' className="w-36 h-auto object-contain" /> 
