@@ -12,7 +12,7 @@ const plaidRoutes = require('./routes/plaidRoutes');
 const app = express();
 
 // Allow requests from frontend (e.g. React on localhost:3000)
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000', 'https://fin-savvy-frontend.vercel.app'];
 
 // Middleware
 app.use(express.json());

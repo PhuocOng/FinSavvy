@@ -118,6 +118,17 @@
   font-weight: 500;
 }
 
+.link-bank-btn {
+  padding: 0.5rem 1rem;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
 .add-expense-btn:hover {
   background-color: #bfdbfe;
 }
