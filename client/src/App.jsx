@@ -12,7 +12,7 @@ import Login from './pages/Login.jsx';
 import EmailVerify from './pages/EmailVerify.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import LandingPage from './pages/LandingPage/Landingpage.jsx';
-import Expenses from './components/Dashboard/Expenses.jsx';
+import Expenses from './components/Dashboard/Expenses/Expenses.jsx';
 
 import { AppContent } from './context/AppContext.jsx';
 

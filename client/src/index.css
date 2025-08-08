@@ -16,12 +16,14 @@
 
 a {
   font-weight: 500;
-  color: inherit;
+  color: black;
   text-decoration: inherit;
 }
+
 a:hover {
-  color: inherit;
+  color: #555; /* dark gray */
 }
+
 
 body {
   width: 100%;
@@ -49,7 +51,7 @@ button {
 
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
 }
 
 @media (prefers-color-scheme: light) {
