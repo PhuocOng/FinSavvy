@@ -241,3 +241,49 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Dark Mode Styles */
+html.dark .dashboard-container {
+  background-image: linear-gradient(to bottom right, #111827, #1f2937);
+}
+
+html.dark .dashboard-title {
+  color: #93c5fd; /* blue-300 */
+}
+
+html.dark .dashboard-subtitle {
+  color: #60a5fa; /* blue-400 */
+}
+
+html.dark .filters-grid-horizontal {
+  background-color: #1f2937; /* gray-800 */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .filter-label {
+  color: #60a5fa; /* blue-400 */
+}
+
+html.dark .filter-select {
+  background-color: #374151; /* gray-700 */
+  border-color: #3b82f6; /* blue-500 */
+  color: #e5e7eb; /* gray-200 */
+}
+
+html.dark .clear-filters-btn,
+html.dark .add-expense-btn,
+html.dark .link-bank-btn {
+  background-color: #374151; /* gray-700 */
+  color: #93c5fd; /* blue-300 */
+}
+
+html.dark .clear-filters-btn:hover,
+html.dark .add-expense-btn:hover,
+html.dark .link-bank-btn:hover {
+  background-color: #4b5563; /* gray-600 */
+}
+
+html.dark .add-expense-panel {
+  background-color: #1f2937; /* gray-800 */
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.25);
+}
