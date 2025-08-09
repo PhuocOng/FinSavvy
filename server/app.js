@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
+const profileRouter = require('./routes/profileRoutes');
 const analyticsRouter = require('./routes/analytics');
 const transactionRoutes = require('./routes/transactionRoutes');
 const gptadviceRoutes = require('./routes/gpt_advice');
@@ -45,6 +46,7 @@ app.get('/api/greetings', (req, res) => {
 // API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/profile', profileRouter);
 app.use('/api/plaid', plaidRoutes);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/transactions', transactionRoutes);
