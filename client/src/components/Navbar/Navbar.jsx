@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppContent } from '../../context/AppContext';
 import axios from 'axios';
@@ -11,6 +11,25 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const logout = async () => {
     try {
@@ -39,7 +58,7 @@ const Navbar = () => {
           {userData && (
             <>
               {/* Dashboard Dropdown */}
-              <li className="relative">
+              <li className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown((prev) => !prev)}
                   className="p-3 hover:bg-[#2563eb] hover:text-white font-medium rounded-md transition-all cursor-pointer"
@@ -66,7 +85,7 @@ const Navbar = () => {
 
         {/* Profile Avatar */}
         {userData && (
-          <div className="relative">
+          <div className="relative" ref={profileDropdownRef}>
             <div 
               className="flex justify-center items-center rounded-full bg-[#F9E0E5] w-10 h-10 cursor-pointer hover:bg-[#F0C0C7] transition-colors"
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
