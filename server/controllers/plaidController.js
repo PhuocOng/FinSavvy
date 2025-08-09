@@ -73,7 +73,7 @@ const syncTransactions = async (req, res) => {
           amount: plaidTx.amount,
           date: new Date(plaidTx.date),
           category: plaidTx.personal_finance_category?.primary || 'Other',
-          type: plaidTx.amount > 0 ? 'income' : 'expense',
+          type: plaidTx.amount < 0 ? 'income' : 'expense',
         },
         { upsert: true } // Option to create a new doc if none is found
       );
