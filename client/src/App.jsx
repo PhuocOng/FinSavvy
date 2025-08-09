@@ -13,6 +13,7 @@ import EmailVerify from './pages/EmailVerify.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import LandingPage from './pages/LandingPage/Landingpage.jsx';
 import Expenses from './components/Dashboard/Expenses/Expenses.jsx';
+import Profile from './pages/Profile.jsx';
 
 import { AppContent } from './context/AppContext.jsx';
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={isLoggedin ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/dashboard/expenses" element={isLoggedin ? <Expenses /> : <Navigate to="/login" />} />
+        <Route path="/profile" element={isLoggedin ? <Profile /> : <Navigate to="/login" />} />
       </Routes>
     </div>
   );
