@@ -81,8 +81,8 @@ const ExpenseForm = ({
       <button
         type="button"
         onClick={onNext}
-        disabled={!name || !category || !date}
-        className={`expense-form-review-button ${name && category && date ? 'enabled' : 'disabled'}`}
+        disabled={!name || !date}
+        className={`expense-form-review-button ${name && date ? 'enabled' : 'disabled'}`}
       >
         Review
       </button>
