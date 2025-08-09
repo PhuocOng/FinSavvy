@@ -4,10 +4,12 @@ import { AppContent } from '../../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
+import { User, LogOut } from 'lucide-react';
 
 const Navbar = () => {
   const { userData, backendUrl, setUserData, setIsLoggedin } = useContext(AppContent);
-  const [showDropdown, setShowDropdown] = useState(false); 
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -52,8 +54,6 @@ const Navbar = () => {
                   </div>
                 )}
               </li>
-
-              <li><Link to="/" className="p-3 hover:bg-[#2563eb] hover:text-white rounded-md transition-all cursor-pointer">Setting</Link></li>
             </>
           )}
         </ul>
@@ -66,13 +66,41 @@ const Navbar = () => {
 
         {/* Profile Avatar */}
         {userData && (
-          <div className="flex justify-center items-center rounded-full bg-[#F9E0E5] w-10 h-10 cursor-pointer relative group">
-            {userData?.name?.[0].toUpperCase()}
-            <div className="absolute hidden group-hover:block top-10 right-0 z-10 text-black rounded bg-gray-300 shadow-md">
-              <ul className="list-none m-0 p-2 text-sm">
-                <li onClick={logout} className="py-1 px-2 hover:bg-gray-400 cursor-pointer">Logout</li>
-              </ul>
+          <div className="relative">
+            <div 
+              className="flex justify-center items-center rounded-full bg-[#F9E0E5] w-10 h-10 cursor-pointer hover:bg-[#F0C0C7] transition-colors"
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            >
+              {userData?.name?.[0].toUpperCase()}
             </div>
+            
+            {showProfileDropdown && (
+              <div className="absolute top-12 right-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <div className="py-2">
+                  <div className="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
+                    {userData?.name}
+                  </div>
+                  <Link 
+                    to="/profile" 
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                    onClick={() => setShowProfileDropdown(false)}
+                  >
+                    <User size={16} className="mr-2" />
+                    Profile Settings
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      logout();
+                      setShowProfileDropdown(false);
+                    }}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <LogOut size={16} className="mr-2" />
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </header>
