@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 import { Calendar, Filter, TrendingUp, DollarSign, CreditCard, ShoppingCart } from 'lucide-react';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import FilterByCategory from '../../components/Dashboard/FilterByCategory';
 import './Dashboard.css';
 import ChatBot from '../ChatBot/ChatBot';
 import AddExpenseForm from '../../components/AddExpense/AddExpenseForm';
+import { useSearchParams } from 'react-router-dom';
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
@@ -20,6 +21,9 @@ const Dashboard = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [isBankLinked, setIsBankLinked] = useState(false);
   const [linkToken, setLinkToken] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const action = searchParams.get('action'); // "add" or "connect"
+  const actionHandledRef = useRef(false);
 
   const fetchTransactions = useCallback(() => {
     axios.get('/api/transactions', { withCredentials: true })
@@ -91,6 +95,42 @@ const Dashboard = () => {
     token: linkToken,
     onSuccess,
   });
+    // Trigger deep-linked actions: ?action=add or ?action=connect
+  // Trigger deep-linked actions: ?action=add or ?action=connect
+  useEffect(() => {
+    if (actionHandledRef.current) return;
+    if (!action) return;
+
+    if (action === 'add') {
+      setShowAddForm(true);
+      actionHandledRef.current = true;
+      setSearchParams(prev => {
+        const p = new URLSearchParams(prev);
+        p.delete('action');
+        return p;
+      });
+      return;
+    }
+
+    if (action === 'connect') {
+      // wait until we actually have a token and Plaid is ready
+      const tryOpen = () => {
+        if (linkToken && ready) {
+          open();
+          actionHandledRef.current = true;
+          setSearchParams(prev => {
+            const p = new URLSearchParams(prev);
+            p.delete('action');
+            return p;
+          });
+        }
+      };
+      tryOpen();
+      const id = setInterval(tryOpen, 200);
+      return () => clearInterval(id);
+    }
+  }, [action, linkToken, ready, open, setSearchParams]);
+
 
   const totalIncome = useMemo(() => filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
   const totalExpenses = useMemo(() => filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
@@ -138,7 +178,7 @@ const Dashboard = () => {
             Clear Filters
           </button>
           <button onClick={() => setShowAddForm(prev => !prev)} className="add-expense-btn">
-            + Add Expense
+            Add Expense
           </button>
           <button onClick={() => open()} disabled={!ready} className="add-expense-btn">
             Link Bank Account
