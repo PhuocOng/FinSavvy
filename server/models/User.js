@@ -2,11 +2,35 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    verifyOtp: { type: String, default: '' },
-    verifyOtpExpireAt: { type: String, default: 0},
+    name: {
+        type: String, 
+        //required: true
+        required: function () { return !this.isGuest; },
+        trim: true
+    },
+    email: { 
+        type: String, 
+        required: function () { return !this.isGuest; }, 
+        //unique: true,
+        //sparse: true,
+        trim: true
+    },
+    password: { 
+        type: String, 
+        required: function () { return !this.isGuest; }
+    },
+    isGuest: { type: Boolean, default: false },
+    guestExpiresAt: { type: Date },
+    // Persist guest per device
+    guestKeyHash: { type: String, unique: true, sparse: true, index: true },
+    guestLastSeen: { type: Date, default: null },
+
+    phone: { type: String, default: '' },
+    dateOfBirth: { type: Date, default: null },
+    address: { type: String, default: '' },
+    profilePicture: { type: String, default: '' },
+    verifyOtp: { type: Number, default: 0 },
+    verifyOtpExpireAt: { type: Number, default: 0},
     isAccountVerified: { type: Boolean, default: false},
     resetOtp: { type: String, default: '' },
     resetOtpExpireAt: { type: Number, default: 0 },
@@ -16,6 +40,11 @@ const userSchema = new mongoose.Schema({
 });
 
 
-const User =  mongoose.model.User || mongoose.model('User', userSchema);
+userSchema.index(
+    { email: 1 },
+    { name: "uniq_email_if_string", unique: true, partialFilterExpression: { email: { $type: "string" } } }
+);
+
+const User =  mongoose.models.User || mongoose.model('User', userSchema);
 
 module.exports = User;
