@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 import { Calendar, Filter, TrendingUp, DollarSign, CreditCard, ShoppingCart } from 'lucide-react';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import FilterByCategory from '../../components/Dashboard/FilterByCategory';
 import './Dashboard.css';
 import ChatBot from '../ChatBot/ChatBot';
 import AddExpenseForm from '../../components/AddExpense/AddExpenseForm';
+import { useSearchParams } from 'react-router-dom';
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
@@ -20,6 +21,9 @@ const Dashboard = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [isBankLinked, setIsBankLinked] = useState(false);
   const [linkToken, setLinkToken] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const action = searchParams.get('action'); // "add" or "connect"
+  const actionHandledRef = useRef(false);
 
   const fetchTransactions = useCallback(() => {
     axios.get('/api/transactions', { withCredentials: true })
@@ -92,6 +96,42 @@ const Dashboard = () => {
     token: linkToken,
     onSuccess,
   });
+    // Trigger deep-linked actions: ?action=add or ?action=connect
+  // Trigger deep-linked actions: ?action=add or ?action=connect
+  useEffect(() => {
+    if (actionHandledRef.current) return;
+    if (!action) return;
+
+    if (action === 'add') {
+      setShowAddForm(true);
+      actionHandledRef.current = true;
+      setSearchParams(prev => {
+        const p = new URLSearchParams(prev);
+        p.delete('action');
+        return p;
+      });
+      return;
+    }
+
+    if (action === 'connect') {
+      // wait until we actually have a token and Plaid is ready
+      const tryOpen = () => {
+        if (linkToken && ready) {
+          open();
+          actionHandledRef.current = true;
+          setSearchParams(prev => {
+            const p = new URLSearchParams(prev);
+            p.delete('action');
+            return p;
+          });
+        }
+      };
+      tryOpen();
+      const id = setInterval(tryOpen, 200);
+      return () => clearInterval(id);
+    }
+  }, [action, linkToken, ready, open, setSearchParams]);
+
 
   const totalIncome = useMemo(() => filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
   const totalExpenses = useMemo(() => filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
@@ -118,14 +158,15 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container dark:bg-gray-900">
       <div className="dashboard-content">
         <div className="dashboard-header">
-          <h1 className="dashboard-title">Transaction Dashboard</h1>
-          <p className="dashboard-subtitle">Visualize your spendings and stay on top of your finances</p>
+          {/* Add dark classes to titles */}
+          <h1 className="dashboard-title dark:text-blue-300">Transaction Dashboard</h1>
+          <p className="dashboard-subtitle dark:text-blue-400">Visualize your spendings and stay on top of your finances</p>
         </div>
 
-        <div className="filters-grid-horizontal">
+        <div className="filters-grid-horizontal dark:bg-gray-800">
           <FilterByDate 
             dateFilter={dateFilter}
             setDateFilter={setDateFilter} 
@@ -135,18 +176,20 @@ const Dashboard = () => {
             setCategoryFilter={setCategoryFilter} 
             categories={categoryOptions}
           />
-          <button onClick={clearFilters} className="clear-filters-btn">
+          {/* Add dark classes to buttons */}
+          <button onClick={clearFilters} className="clear-filters-btn dark:bg-gray-700 dark:text-blue-300 dark:hover:bg-gray-600">
             Clear Filters
           </button>
-          <button onClick={() => setShowAddForm(prev => !prev)} className="add-expense-btn">
-            + Add Expense
+          <button onClick={() => setShowAddForm(prev => !prev)} className="add-expense-btn dark:bg-gray-700 dark:text-blue-300 dark:hover:bg-gray-600">
+            Add Expense
           </button>
-          <button onClick={() => open()} disabled={!ready} className="add-expense-btn">
+          <button onClick={() => open()} disabled={!ready} className="add-expense-btn dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500">
             Link Bank Account
           </button>
         </div>
 
         <div className="charts-grid">
+          {/* The charts might need specific props or configuration for dark mode themes */}
           <PieChart data={filteredTransactions} />
           <BarChart data={filteredTransactions} />
         </div>
@@ -161,9 +204,10 @@ const Dashboard = () => {
         {showAddForm && (
           <>
             <div className="overlay" onClick={() => setShowAddForm(false)} />
-            <div className="add-expense-panel show">
+            {/* Add dark classes to the slide-in panel */}
+            <div className="add-expense-panel show dark:bg-gray-800">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-800">Add Expense</h2>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Add Expense</h2>
               </div>
               <div className="add-expense-form">
                 <AddExpenseForm

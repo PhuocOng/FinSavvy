@@ -12,26 +12,26 @@ const TransactionTable = ({ transactions, onDelete }) => (
       <table className="w-full">
         <thead>
           <tr className="border-b-2 border-blue-100">
-            <th className="text-left py-3 px-4 text-blue-700 font-semibold">Name</th>
-            <th className="text-center py-3 px-4 text-blue-700 font-semibold">Date</th>
-            <th className="text-center py-3 px-4 text-blue-700 font-semibold">Amount</th>
-            <th className="text-center py-3 px-4 text-blue-700 font-semibold">Category</th>
-            <th className="text-center py-3 px-4 text-blue-700 font-semibold">Action</th>
+            <th className="text-left py-3 px-4 text-gray-700 font-semibold">Name</th>
+            <th className="text-center py-3 px-4 text-gray-700 font-semibold">Date</th>
+            <th className="text-center py-3 px-4 text-gray-700 font-semibold">Amount</th>
+            <th className="text-center py-3 px-4 text-gray-700 font-semibold">Category</th>
+            <th className="text-center py-3 px-4 text-gray-700 font-semibold">Action</th>
           </tr>
         </thead>
         <tbody>
           {transactions.map((txn) => (
             <tr key={txn._id} className="border-b border-blue-50 hover:bg-blue-25 transition-colors">
-              <td className="py-3 px-4 text-blue-800">{txn.name.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
-              <td className="py-3 px-4 text-blue-800">
+              <td className="py-3 px-4 text-gray-800">{txn.name.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
+              <td className="py-3 px-4 text-gray-800">
                 {new Date(txn.date).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
               </td>
-              <td className="py-3 px-4 text-blue-800 text-center">${txn.amount.toFixed(2)}</td>
-              <td className="py-3 px-4 text-blue-800 text-center">{txn.category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
+              <td className="py-3 px-4 text-gray-800 text-center">${txn.amount.toFixed(2)}</td>
+              <td className="py-3 px-4 text-grey-800 text-center">{txn.category.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}</td>
               <td className="py-3 px-4 text-red-600 cursor-pointer text-center"><button onClick={() => onDelete(txn._id)}>🗑️</button></td>
             </tr>
           ))}

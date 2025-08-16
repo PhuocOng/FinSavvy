@@ -36,9 +36,15 @@ const userSchema = new mongoose.Schema({
     resetOtpExpireAt: { type: Number, default: 0 },
     plaidAccessToken: { type: String, required: false},
     plaidItemId: { type: String, required: false},
-
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
+// Update the updatedAt field before saving
+userSchema.pre('save', function(next) {
+    this.updatedAt = Date.now();
+    next();
+});
 
 userSchema.index(
     { email: 1 },
