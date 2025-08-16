@@ -94,7 +94,11 @@ const Navbar = () => {
 
         {/* 2. Group the right-side items for easy layout */}
         <div className="flex items-center gap-4">
-          <ThemeToggleButton/>
+          {/* <div className="relative hidden md:flex items-center justify-center">
+            <i className="bx bx-search absolute left-3 text-2xl text-gray-500"></i>
+            <input type="text" placeholder="Search..." className="py-2 pl-10 rounded-xl border-2 border-[#2563eb] focus:bg-slate-100 dark:bg-gray-700 dark:text-white dark:border-blue-500 focus:outline-[#3b82f6]" />
+          </div> */}
+          <ThemeToggleButton />
 
           {userData && (
             <div className="relative" ref={profileDropdownRef}>
