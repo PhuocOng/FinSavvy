@@ -3,6 +3,7 @@ import axios from 'axios';
 import AmountEntry from './AmountEntry';
 import ExpenseForm from './ExpenseForm';
 import ConfirmExpense from './ConfirmExpense';
+import { DEFAULT_CATEGORIES } from '../../constants/categories';
 
 const AddExpenseForm = ({ onAdd, categoryOptions, onClose }) => {
   const [step, setStep] = useState(1);
@@ -12,10 +13,9 @@ const AddExpenseForm = ({ onAdd, categoryOptions, onClose }) => {
   const [date, setDate] = useState(new Date());
   const [confirmed, setConfirmed] = useState(false);
   const handleEdit = (field) => {
-  if (field === 'amount') setStep(1);
-  else if (field === 'name' || field === 'category' || field === 'date') setStep(2);
-};
-
+    if (field === 'amount') setStep(1);
+    else if (field === 'name' || field === 'category' || field === 'date') setStep(2);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,10 +39,16 @@ const AddExpenseForm = ({ onAdd, categoryOptions, onClose }) => {
     }
   };
 
+  // Fallback: no props
+  const finalCategories =
+    (Array.isArray(categoryOptions) && categoryOptions.length > 0)
+      ? categoryOptions
+      : DEFAULT_CATEGORIES;
+
   return (
-      <form onSubmit={handleSubmit} className="add-expense-form">
+    <form onSubmit={handleSubmit} className="add-expense-form">
     {confirmed && (
-      <div className="text-green-600 font-medium">✅ Expense added successfully!</div>
+      <div className="text-green-600 font-medium">Expense added successfully!</div>
     )}
 
     <div className="add-expense-panel show">
@@ -62,7 +68,7 @@ const AddExpenseForm = ({ onAdd, categoryOptions, onClose }) => {
           setCategory={setCategory}
           date={date}
           setDate={setDate}
-          categoryOptions={categoryOptions}
+          categoryOptions={finalCategories}
           onNext={() => setStep(3)}
           onBack={() => setStep(1)}
         />
@@ -85,7 +91,6 @@ const AddExpenseForm = ({ onAdd, categoryOptions, onClose }) => {
       )}
     </div>
   </form>
-
   );
 };
 

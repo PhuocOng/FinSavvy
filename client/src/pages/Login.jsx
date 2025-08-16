@@ -5,6 +5,7 @@ import { AppContent } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+const GUEST_KEY_STORAGE = 'fs_guestKey';
 
 const Login = () => {
   const [state, setState] = useState('Sign Up');
@@ -20,24 +21,26 @@ const Login = () => {
 
   const handleGuestLogin = async () => {
     try {
-      const { data } = await axios.post(`${backendUrl}/api/auth/guest`);
+      const existingKey = localStorage.getItem(GUEST_KEY_STORAGE);
+      const { data } = await axios.post(`${backendUrl}/api/auth/guest`, {guestKey: existingKey || null}, { withCredentials: true });
+      
+    if (!data?.success) {
+      return toast.error(data?.message || 'Guest login failed');
+    }
 
+    if (data.guestKey) {
+      localStorage.setItem(GUEST_KEY_STORAGE, data.guestKey);
+    }
 
-      if (data.success){
-        const guestData = { name: 'Guest', isGuest: true };
-        localStorage.setItem("token", data.token);
-        setUserData(guestData);
+    const guestData = { name: 'Guest', isGuest: true };
+    setUserData(guestData);
+    localStorage.setItem('userData', JSON.stringify(guestData));
 
+    setIsLoggedin(true);
+    await getUserData();
 
-        localStorage.setItem("userData", JSON.stringify(guestData));
+    navigate('/dashboard');
 
-
-        setIsLoggedin(true)
-        await getUserData();
-        navigate('/')
-      } else {
-        toast.error(data.message);
-      }
     } catch (err) {
       toast.error(err.response?.data?.message || "Guest login failed");
     }

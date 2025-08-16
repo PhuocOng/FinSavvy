@@ -1,0 +1,8 @@
+export const DEFAULT_CATEGORIES = [
+  "ENTERTAINMENT",
+  "FOOD_AND_DRINK",
+  "GENERAL_MECHANDISE",
+  "Health",
+  "PERSONAL_CARE",
+  "TRAVEL"
+];
