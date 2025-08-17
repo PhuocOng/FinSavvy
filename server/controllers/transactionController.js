@@ -3,6 +3,9 @@ const Transaction = require("../models/transactionModel.js");
 const addManualExpense = async(req, res) => {
   try {
     const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "NO_AUTH" }); 
+    }
     const { name, amount, category, date} = req.body;
 
     if (!name || !amount || !category || !date) {

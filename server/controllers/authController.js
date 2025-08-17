@@ -4,9 +4,13 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
 const transporter = require("../config/nodemailer.js");
 const { EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE } = require("../config/emailTemplate.js");
+const crypto = require("crypto");
+const sha256 = (s) => crypto.createHash("sha256").update(s).digest("hex"); // used to hash guestkey be4 saving to db (never store raw key) and FE keeps the raw guestkey in localstorage
 
 const register = async(req, res) => {
-    const {name, email, password} = req.body;
+    const name = req.body.name?.trim()
+    const email = req.body.email?.trim()
+    const { password } = req.body;
     if (!name || !email || !password) {
         return res.json({success: false, message: 'Missing Details'})
     }
@@ -29,7 +33,7 @@ const register = async(req, res) => {
         res.cookie('token', token,  {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -73,7 +77,8 @@ const register = async(req, res) => {
 }
 
 const login = async(req, res) => {
-    const {email, password} = req.body;
+    const email = req.body.email?.trim();
+    const { password } = req.body;
 
     if (!email || !password) {
         return res.json({success: false, message: 'Email and password are required'})
@@ -97,7 +102,7 @@ const login = async(req, res) => {
         res.cookie('token', token,  {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -136,7 +141,10 @@ const logout = async (req, res) => {
 // Send verification OTP to user's email
 const sendVerifyOtp = async (req, res) => {
     try {
-        const {userId} = req.body;
+        //const {userId} = req.body;
+        const userId = req.user?.id;
+        if (!userId) return res.status(401).json({ success:false, message:'Not authorized' });
+
         const user = await User.findById(userId)
 
         if(user.isAccountVerified) {
@@ -312,24 +320,61 @@ const resetPassword = async (req, res) => {
 }
 
 const guestLogin = async (req, res) => {
-    try {
-        const guestPayload = {
-            userType: "guest",
-            createdAt: new Date()
-        }
+  try {
+    const { guestKey } = req.body || {};
+    const now = Date.now();
+    const expiresAt = new Date(now + 7 * 24 * 60 * 60 * 1000);
 
-        const token = jwt.sign(guestPayload, process.env.JWT_SECRET, {
-            expiresIn: "7d"
-        })
+    if (guestKey) {
+      const u = await User.findOne({ isGuest: true, guestKeyHash: sha256(guestKey) }); //
+      if (u && u.guestExpiresAt && u.guestExpiresAt.getTime() > now) {
+
+        u.guestExpiresAt = expiresAt;
+        u.guestLastSeen = new Date();
+        await u.save();
+
+        const token = jwt.sign({ id: u._id, userType: "guest" }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
 
         return res.json({
-            success: true,
-            message: "Guest login successful",
-            token,
+          success: true,
+          reused: true,
+          user: { _id: u._id, isGuest: true, guestExpiresAt: u.guestExpiresAt },
         });
-    } catch (error) {
-        return res.json({ success: false, message: error.message });
+      }
     }
-}
+
+    const newKey = crypto.randomBytes(32).toString("hex");
+    const guest = await User.create({
+      name: "Guest",
+      isGuest: true,
+      guestExpiresAt: expiresAt,
+      guestKeyHash: sha256(newKey), // 
+      guestLastSeen: new Date(),
+    });
+
+    const token = jwt.sign({ id: guest._id, userType: "guest" }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.json({
+      success: true,
+      reused: false,
+      guestKey: newKey,
+      user: { _id: guest._id, isGuest: true, guestExpiresAt: expiresAt },
+    });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
 
 module.exports = {register, login, logout, sendVerifyOtp, verifyEmail, isAuthenticated, sendResetOtp, resetPassword, guestLogin};
