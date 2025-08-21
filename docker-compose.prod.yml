@@ -13,7 +13,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-      # target: production
+      target: production
     env_file:
       - ./server/.env.prod
     depends_on:
