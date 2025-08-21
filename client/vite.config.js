@@ -7,13 +7,6 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
   },
   optimizeDeps: {
     exclude: ['crypto'],
@@ -23,18 +16,5 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 1000, // 🔧 increase the limit (default is 500)
-
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('recharts')) return 'chart';
-            if (id.includes('lucide-react')) return 'icons';
-            if (id.includes('react')) return 'react-vendor';
-            return 'vendor';
-          }
-        },
-      },
-    },
   },
 });

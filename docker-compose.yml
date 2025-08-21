@@ -1,0 +1,56 @@
+services:
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: app-frontend
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: app-backend
+    depends_on:
+      - db
+    networks:
+      - app-network
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  db:
+    image: mongo:latest
+    container_name: app-db
+    ports:
+      - 27017:27017
+    volumes:
+      - task:/data/db
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+      target: development
+    container_name: app-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  task:
