@@ -36,10 +36,6 @@ services:
       - app-network
 
   nginx:
-    build:
-      context: ./docker/nginx
-      dockerfile: Dockerfile
-      target: development
     container_name: app-nginx
     ports:
       - "80:80"
