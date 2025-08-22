@@ -36,6 +36,10 @@ RUN rm -rf /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY conf.d/prod.conf /etc/nginx/conf.d/default.conf
 
+# Copy SSL certificates into the container
+COPY certs/fullchain.pem /etc/letsencrypt/live/finsavvy.online/fullchain.pem
+COPY certs/privkey.pem /etc/letsencrypt/live/finsavvy.online/privkey.pem
+
 # Create cache directory and set permissions
 RUN mkdir -p /var/cache/nginx && \
     chown -R nginx:nginx /var/cache/nginx
@@ -45,7 +49,7 @@ RUN mkdir -p /var/log/nginx && \
     chown -R nginx:nginx /var/log/nginx
 
 # Expose port 80
-EXPOSE 80
+EXPOSE 80 443
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
