@@ -323,7 +323,9 @@ const guestLogin = async (req, res) => {
   try {
     const { guestKey } = req.body || {};
     const now = Date.now();
-    const expiresAt = new Date(now + 7 * 24 * 60 * 60 * 1000);
+    // const expiresAt = new Date(now + 7 * 24 * 60 * 60 * 1000);
+    const ttlMs = 3 * 24 * 60 * 60 * 1000;
+    const expiresAt = new Date(now + ttlMs);
 
     if (guestKey) {
       const u = await User.findOne({ isGuest: true, guestKeyHash: sha256(guestKey) }); //
@@ -333,12 +335,12 @@ const guestLogin = async (req, res) => {
         u.guestLastSeen = new Date();
         await u.save();
 
-        const token = jwt.sign({ id: u._id, userType: "guest" }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        const token = jwt.sign({ id: u._id, userType: "guest" }, process.env.JWT_SECRET, { expiresIn: "3d" });
         res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge: ttlMs,
         });
 
         return res.json({
@@ -358,12 +360,12 @@ const guestLogin = async (req, res) => {
       guestLastSeen: new Date(),
     });
 
-    const token = jwt.sign({ id: guest._id, userType: "guest" }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: guest._id, userType: "guest" }, process.env.JWT_SECRET, { expiresIn: "3d" });
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: ttlMs,
     });
 
     return res.json({

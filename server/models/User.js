@@ -51,6 +51,8 @@ userSchema.index(
     { name: "uniq_email_if_string", unique: true, partialFilterExpression: { email: { $type: "string" } } }
 );
 
+userSchema.index({ guestExpiresAt: 1 }, { expireAfterSeconds: 0 });
+
 const User =  mongoose.models.User || mongoose.model('User', userSchema);
 
 module.exports = User;
