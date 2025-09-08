@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+// const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const TransactionSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+    index: true,
   },
   // ADDED: To store the unique ID from Plaid and prevent duplicates
   transactionId: {
@@ -17,10 +19,6 @@ const TransactionSchema = new Schema({
   // ADDED: For the transaction or merchant name
   name: {
     type: String,
-    required: true,
-  },
-  name: { 
-    type: String, 
     required: true,
   },
   amount: {
@@ -42,8 +40,11 @@ const TransactionSchema = new Schema({
     enum: ['income', 'expense'],
     required: true,
   },
+  guestExpiresAt: { type: Date, default: null },
 }, {
   timestamps: true, // Keeps createdAt and updatedAt
 });
+
+TransactionSchema.index({ guestExpiresAt: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model('Transaction', TransactionSchema);
