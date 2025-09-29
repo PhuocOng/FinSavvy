@@ -1,6 +1,7 @@
-import React from 'react';
-import { FaArrowLeft, FaChevronRight } from 'react-icons/fa';
-import './AddExpense.css';
+import React from "react";
+import { FaArrowLeft, FaChevronRight } from "react-icons/fa";
+import "./AddExpense.css";
+import { CornerDownLeft } from "lucide-react";
 
 const ConfirmExpense = ({
   name,
@@ -16,14 +17,14 @@ const ConfirmExpense = ({
       {/* Header */}
       <div className="confirm-expense-header">
         <button onClick={onBack} className="back-button">
-          <FaArrowLeft />
+          <CornerDownLeft />
         </button>
         <h2 className="confirm-expense-title">Confirm details</h2>
       </div>
 
       {/* Main Content */}
       <div className="confirm-expense-details">
-        <div onClick={() => onEdit('amount')} className="confirm-expense-item">
+        <div onClick={() => onEdit("amount")} className="confirm-expense-item">
           <div>
             <div className="confirm-expense-label">Amount</div>
             <div className="confirm-expense-value">${amount}</div>
@@ -31,33 +32,36 @@ const ConfirmExpense = ({
           <FaChevronRight className="chevron-icon" />
         </div>
 
-        <div onClick={() => onEdit('name')} className="confirm-expense-item">
+        <div onClick={() => onEdit("name")} className="confirm-expense-item">
           <div>
             <div className="confirm-expense-label">Description</div>
-            <div className="confirm-expense-value">{name || '—'}</div>
+            <div className="confirm-expense-value">{name || "—"}</div>
           </div>
           <FaChevronRight className="chevron-icon" />
         </div>
 
-        <div onClick={() => onEdit('category')} className="confirm-expense-item">
+        <div
+          onClick={() => onEdit("category")}
+          className="confirm-expense-item"
+        >
           <div>
             <div className="confirm-expense-label">Category</div>
-            <div className="confirm-expense-value">{category || '—'}</div>
+            <div className="confirm-expense-value">{category || "—"}</div>
           </div>
           <FaChevronRight className="chevron-icon" />
         </div>
 
-        <div onClick={() => onEdit('date')} className="confirm-expense-item">
+        <div onClick={() => onEdit("date")} className="confirm-expense-item">
           <div>
             <div className="confirm-expense-label">Date</div>
             <div className="confirm-expense-value">
               {date
-                ? new Date(date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
+                ? new Date(date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                   })
-                : '—'}
+                : "—"}
             </div>
           </div>
           <FaChevronRight className="chevron-icon" />
@@ -65,7 +69,7 @@ const ConfirmExpense = ({
       </div>
 
       {/* Footer */}
-      <div className="confirm-expense-footer">
+      <div className="confirm-expense-footer mb-20">
         <button
           type="submit"
           onClick={onSubmit}

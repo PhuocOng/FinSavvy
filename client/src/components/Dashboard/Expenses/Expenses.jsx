@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import "./Expenses.css";
+import { CornerDownLeft, Eye } from "lucide-react";
 
 const Expenses = () => {
   const { backendUrl } = useContext(AppContent);
@@ -86,9 +87,9 @@ const Expenses = () => {
               <th>Date</th>
               <th>Description</th>
               <th>Category</th>
-              <th className="text-right">Amount ($)</th>
-              <th className="text-center">Type</th>
-              <th className="text-center">Actions</th>
+              <th>Amount ($)</th>
+              <th>Type</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -107,7 +108,7 @@ const Expenses = () => {
                     <td>{exp.name}</td>
                     <td>{exp.category}</td>
                     <td
-                      className={`text-right amount ${
+                      className={`text-center amount ${
                         isCredit ? "green" : "red"
                       }`}
                     >
@@ -152,7 +153,8 @@ const Expenses = () => {
           <div className="modal-sidebar">
             <div className="modal-header">
               <button onClick={closeModal} className="back-button">
-                <FaArrowLeft />
+                {/* <FaArrowLeft /> */}
+                <CornerDownLeft />
               </button>
               <div className="modal-title">
                 <h3 className={selectedExpense.amount < 0 ? "green" : "blue"}>

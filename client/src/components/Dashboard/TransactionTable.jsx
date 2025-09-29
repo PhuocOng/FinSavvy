@@ -28,7 +28,7 @@ const TransactionTable = ({ transactions, onDelete }) => (
                   .toLowerCase()
                   .replace(/\b\w/g, (c) => c.toUpperCase())}
               </td>
-              <td className="transaction-table-td">
+              <td className="transaction-table-td text-center">
                 {new Date(txn.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
