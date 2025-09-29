@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   const fetchTransactions = useCallback(() => {
     axios
-      .get("/api/transactions", { withCredentials: true })
+      .get(`${backendApiUrl}/api/transactions`, { withCredentials: true })
       .then((res) => {
         const txns = Array.isArray(res?.data?.transactions)
           ? res.data.transactions
@@ -55,7 +55,7 @@ const Dashboard = () => {
         setCategoryOptions(categories);
       })
       .catch((err) => console.error("Error fetching transactions:", err));
-  }, []);
+  }, [backendApiUrl]);
 
   useEffect(() => {
     fetchTransactions();
@@ -92,7 +92,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Failed to create link token", error);
     }
-  }, []);
+  }, [backendApiUrl]);
 
   useEffect(() => {
     generateToken();
@@ -166,21 +166,21 @@ const Dashboard = () => {
     }
   }, [action, linkToken, ready, open, setSearchParams]);
 
-  const totalIncome = useMemo(
-    () =>
-      filteredTransactions
-        .filter((t) => t.type === "income")
-        .reduce((sum, t) => sum + t.amount, 0),
-    [filteredTransactions]
-  );
-  const totalExpenses = useMemo(
-    () =>
-      filteredTransactions
-        .filter((t) => t.type === "expense")
-        .reduce((sum, t) => sum + t.amount, 0),
-    [filteredTransactions]
-  );
-  const netAmount = totalIncome - totalExpenses;
+  // const totalIncome = useMemo(
+  //   () =>
+  //     filteredTransactions
+  //       .filter((t) => t.type === "income")
+  //       .reduce((sum, t) => sum + t.amount, 0),
+  //   [filteredTransactions]
+  // );
+  // const totalExpenses = useMemo(
+  //   () =>
+  //     filteredTransactions
+  //       .filter((t) => t.type === "expense")
+  //       .reduce((sum, t) => sum + t.amount, 0),
+  //   [filteredTransactions]
+  // );
+  // const netAmount = totalIncome - totalExpenses;
 
   const handleAddManualExpense = (newExpense) => {
     setTransactions((prev) => [...prev, newExpense]);
