@@ -38,6 +38,8 @@ const Dashboard = () => {
   const action = searchParams.get("action"); // "add" or "connect"
   const actionHandledRef = useRef(false);
 
+  const backendApiUrl = import.meta.env.VITE_BACKEND_URL;
+
   const fetchTransactions = useCallback(() => {
     axios
       .get("/api/transactions", { withCredentials: true })
@@ -80,7 +82,7 @@ const Dashboard = () => {
     try {
       const authToken = localStorage.getItem("token");
       const response = await axios.post(
-        "/api/plaid/create_link_token",
+        `${backendApiUrl}/api/plaid/create_link_token`,
         {},
         {
           headers: { Authorization: `Bearer ${authToken}` },
@@ -100,7 +102,7 @@ const Dashboard = () => {
     const authToken = localStorage.getItem("token");
     try {
       await axios.post(
-        "/api/plaid/exchange_public_token",
+        `${backendApiUrl}/api/plaid/exchange_public_token`,
         { public_token },
         {
           headers: { Authorization: `Bearer ${authToken}` },
@@ -109,7 +111,7 @@ const Dashboard = () => {
 
       alert("Bank account linked! Syncing transactions now...");
       await axios.post(
-        "/api/plaid/sync-transactions",
+        `${backendApiUrl}/api/plaid/sync-transactions`,
         {},
         {
           headers: { Authorization: `Bearer ${authToken}` },
