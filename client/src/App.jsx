@@ -36,7 +36,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="app w-full bg-gradient-to-br from-blue-50 to-blue-100">
+      <div className="app w-full">
         <ToastContainer />
 
         {isLandingPage ? <PublicNavbar /> : isLoggedin && <Navbar />}

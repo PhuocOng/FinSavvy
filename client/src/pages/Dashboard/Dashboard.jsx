@@ -202,46 +202,49 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-200 dark:from-gray-900 dark:to-gray-800 p-0">
-      <div className="max-w-6xl mx-auto mt-0">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-blue-800 dark:text-blue-300 mb-2">
-            Transaction Dashboard
-          </h1>
-          <p className="text-blue-700 dark:text-blue-400">
-            Visualize your spendings and stay on top of your finances
-          </p>
+    <div className="dashboard-container">
+      <div className="dashboard-content">
+        <div className="dashboard-header">
+          <div className="dashboard-title-container">
+            <div className="dashboard-title-icon">
+              <TrendingUp className="dashboard-title-icon-svg" />
+            </div>
+            <div className="dashboard-title-content">
+              <h1 className="dashboard-title">Transaction Dashboard</h1>
+              <p className="dashboard-subtitle">
+                <DollarSign className="dashboard-subtitle-icon" />
+                Visualize your spendings and stay on top of your finances
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-6 items-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-md mb-8">
+        <div className="filters-grid-horizontal">
           <FilterByDate dateFilter={dateFilter} setDateFilter={setDateFilter} />
           <FilterByCategory
             categoryFilter={categoryFilter}
             setCategoryFilter={setCategoryFilter}
             categories={categoryOptions}
           />
-          <button
-            onClick={clearFilters}
-            className="px-4 py-2 bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition-colors font-medium"
-          >
+          <button onClick={clearFilters} className="clear-filters-btn">
             Clear Filters
           </button>
           <button
             onClick={() => setShowAddForm((prev) => !prev)}
-            className="px-4 py-2 bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-gray-600 transition-colors font-medium"
+            className="add-expense-btn"
           >
             Add Expense
           </button>
           <button
             onClick={() => open()}
             disabled={!ready}
-            className="px-4 py-2 bg-blue-600 dark:bg-blue-600 text-white dark:text-white rounded-lg hover:bg-blue-500 dark:hover:bg-blue-500 transition-colors font-medium"
+            className="link-bank-btn"
           >
             Link Bank Account
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="charts-grid">
           <PieChart data={filteredTransactions} />
           <BarChart data={filteredTransactions} />
         </div>
@@ -256,12 +259,9 @@ const Dashboard = () => {
         {showAddForm && (
           <>
             <div className="overlay" onClick={() => setShowAddForm(false)} />
-            {/* Add dark classes to the slide-in panel */}
-            <div className="add-expense-panel show dark:bg-gray-800">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                  Add Expense
-                </h2>
+            <div className="add-expense-panel show">
+              <div className="modal-header">
+                <h2>Add Expense</h2>
               </div>
               <div className="add-expense-form">
                 <AddExpenseForm
