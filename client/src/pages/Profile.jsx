@@ -1,32 +1,38 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { AppContent } from '../context/AppContext';
-import { getUserProfile, updateProfile, changePassword } from '../services/profile';
-import { User, Lock, Save, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import './Profile.css';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AppContent } from "../context/AppContext";
+import { ThemeContext } from "../context/ThemeContext";
+import {
+  getUserProfile,
+  updateProfile,
+  changePassword,
+} from "../services/profile";
+import { User, Lock, Save, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import "./Profile.css";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { userData, setUserData } = useContext(AppContent);
-  const [activeTab, setActiveTab] = useState('profile');
+  const { theme } = useContext(ThemeContext);
+  const [activeTab, setActiveTab] = useState("profile");
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    dateOfBirth: '',
-    address: ''
+    name: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    address: "",
   });
   const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
-    confirm: false
+    confirm: false,
   });
 
   useEffect(() => {
@@ -40,15 +46,17 @@ const Profile = () => {
       if (response.success) {
         const profile = response.profile;
         setProfileData({
-          name: profile.name || '',
-          email: profile.email || '',
-          phone: profile.phone || '',
-          dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '',
-          address: profile.address || ''
+          name: profile.name || "",
+          email: profile.email || "",
+          phone: profile.phone || "",
+          dateOfBirth: profile.dateOfBirth
+            ? new Date(profile.dateOfBirth).toISOString().split("T")[0]
+            : "",
+          address: profile.address || "",
         });
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to fetch profile data');
+      toast.error(error.message || "Failed to fetch profile data");
     } finally {
       setLoading(false);
     }
@@ -60,15 +68,15 @@ const Profile = () => {
       setLoading(true);
       const response = await updateProfile(profileData);
       if (response.success) {
-        toast.success('Profile updated successfully!');
+        toast.success("Profile updated successfully!");
         // Update user data in context
-        setUserData(prev => ({
+        setUserData((prev) => ({
           ...prev,
-          ...profileData
+          ...profileData,
         }));
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to update profile');
+      toast.error(error.message || "Failed to update profile");
     } finally {
       setLoading(false);
     }
@@ -76,14 +84,14 @@ const Profile = () => {
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-    
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      toast.error('New passwords do not match');
+      toast.error("New passwords do not match");
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
-      toast.error('New password must be at least 6 characters long');
+      toast.error("New password must be at least 6 characters long");
       return;
     }
 
@@ -91,41 +99,41 @@ const Profile = () => {
       setLoading(true);
       const response = await changePassword({
         currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
+        newPassword: passwordData.newPassword,
       });
       if (response.success) {
-        toast.success('Password changed successfully!');
+        toast.success("Password changed successfully!");
         setPasswordData({
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
         });
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to change password');
+      toast.error(error.message || "Failed to change password");
     } finally {
       setLoading(false);
     }
   };
 
   const togglePasswordVisibility = (field) => {
-    setShowPasswords(prev => ({
+    setShowPasswords((prev) => ({
       ...prev,
-      [field]: !prev[field]
+      [field]: !prev[field],
     }));
   };
 
   const handleInputChange = (field, value) => {
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handlePasswordInputChange = (field, value) => {
-    setPasswordData(prev => ({
+    setPasswordData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -138,209 +146,233 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className={`profile-container ${theme || "light"}`}>
+      <div className="profile-content">
         {/* Header */}
-        <div className="flex items-center mb-8">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center text-gray-600 hover:text-gray-800 transition-colors mr-4"
-          >
-            <ArrowLeft size={20} />
-            <span className="ml-2">Back</span>
-          </button>
-          <h1 className="text-3xl font-bold text-gray-800">Profile Settings</h1>
+        <div className="profile-header">
+          <div className="profile-title-container">
+            <div className="profile-title-icon">
+              <User className="profile-title-icon-svg" />
+            </div>
+            <div className="profile-title-content">
+              <h1 className="profile-title">Profile Settings</h1>
+              <p className="profile-subtitle">
+                Manage your account information and security settings
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="flex border-b">
+        <div className="profile-tabs">
+          <div className="profile-tab-nav">
             <button
-              onClick={() => setActiveTab('profile')}
-              className={`flex items-center px-6 py-4 font-medium transition-colors ${
-                activeTab === 'profile'
-                  ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-800'
+              onClick={() => setActiveTab("profile")}
+              className={`profile-tab-button ${
+                activeTab === "profile" ? "active" : ""
               }`}
             >
-              <User size={20} className="mr-2" />
-              Profile Information
+              <User className="profile-tab-icon" />
+              <span>Profile Information</span>
             </button>
             <button
-              onClick={() => setActiveTab('password')}
-              className={`flex items-center px-6 py-4 font-medium transition-colors ${
-                activeTab === 'password'
-                  ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-800'
+              onClick={() => setActiveTab("password")}
+              className={`profile-tab-button ${
+                activeTab === "password" ? "active" : ""
               }`}
             >
-              <Lock size={20} className="mr-2" />
-              Change Password
+              <Lock className="profile-tab-icon" />
+              <span>Change Password</span>
             </button>
           </div>
 
-          <div className="p-6">
+          <div className="profile-tab-content">
             {/* Profile Information Tab */}
-            {activeTab === 'profile' && (
-              <form onSubmit={handleProfileUpdate} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name
-                    </label>
+            {activeTab === "profile" && (
+              <form onSubmit={handleProfileUpdate} className="profile-form">
+                <div className="profile-form-grid">
+                  <div className="profile-form-group">
+                    <label className="profile-form-label">Full Name</label>
                     <input
                       type="text"
                       value={profileData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
+                      className="profile-form-input"
                       required
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email
-                    </label>
+                  <div className="profile-form-group">
+                    <label className="profile-form-label">Email</label>
                     <input
                       type="email"
                       value={profileData.email}
                       disabled
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
+                      className="profile-form-input profile-form-input-disabled"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                    <p className="profile-form-helper">
+                      Email cannot be changed
+                    </p>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
-                    </label>
+                  <div className="profile-form-group">
+                    <label className="profile-form-label">Phone Number</label>
                     <input
                       type="tel"
                       value={profileData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
+                      className="profile-form-input"
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Date of Birth
-                    </label>
+                  <div className="profile-form-group">
+                    <label className="profile-form-label">Date of Birth</label>
                     <input
                       type="date"
                       value={profileData.dateOfBirth}
-                      onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) =>
+                        handleInputChange("dateOfBirth", e.target.value)
+                      }
+                      className="profile-form-input"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Address
-                  </label>
+                <div className="profile-form-group profile-form-group-full">
+                  <label className="profile-form-label">Address</label>
                   <textarea
                     value={profileData.address}
-                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("address", e.target.value)
+                    }
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="profile-form-textarea"
                     placeholder="Enter your address"
                   />
                 </div>
 
-                <div className="flex justify-end">
+                <div className="profile-form-actions">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="profile-form-submit"
                   >
-                    <Save size={20} className="mr-2" />
-                    {loading ? 'Saving...' : 'Save Changes'}
+                    <Save className="profile-form-submit-icon" />
+                    <span>{loading ? "Saving..." : "Save Changes"}</span>
                   </button>
                 </div>
               </form>
             )}
 
             {/* Change Password Tab */}
-            {activeTab === 'password' && (
-              <form onSubmit={handlePasswordChange} className="space-y-6 max-w-md">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Current Password
-                  </label>
-                  <div className="relative">
+            {activeTab === "password" && (
+              <form
+                onSubmit={handlePasswordChange}
+                className="profile-password-form"
+              >
+                <div className="profile-form-group">
+                  <label className="profile-form-label">Current Password</label>
+                  <div className="profile-password-input-container">
                     <input
-                      type={showPasswords.current ? 'text' : 'password'}
+                      type={showPasswords.current ? "text" : "password"}
                       value={passwordData.currentPassword}
-                      onChange={(e) => handlePasswordInputChange('currentPassword', e.target.value)}
-                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) =>
+                        handlePasswordInputChange(
+                          "currentPassword",
+                          e.target.value
+                        )
+                      }
+                      className="profile-form-input profile-password-input"
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => togglePasswordVisibility('current')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      onClick={() => togglePasswordVisibility("current")}
+                      className="profile-password-toggle"
                     >
-                      {showPasswords.current ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {showPasswords.current ? (
+                        <EyeOff className="profile-password-icon" />
+                      ) : (
+                        <Eye className="profile-password-icon" />
+                      )}
                     </button>
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    New Password
-                  </label>
-                  <div className="relative">
+                <div className="profile-form-group">
+                  <label className="profile-form-label">New Password</label>
+                  <div className="profile-password-input-container">
                     <input
-                      type={showPasswords.new ? 'text' : 'password'}
+                      type={showPasswords.new ? "text" : "password"}
                       value={passwordData.newPassword}
-                      onChange={(e) => handlePasswordInputChange('newPassword', e.target.value)}
-                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) =>
+                        handlePasswordInputChange("newPassword", e.target.value)
+                      }
+                      className="profile-form-input profile-password-input"
                       required
                       minLength={6}
                     />
                     <button
                       type="button"
-                      onClick={() => togglePasswordVisibility('new')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      onClick={() => togglePasswordVisibility("new")}
+                      className="profile-password-toggle"
                     >
-                      {showPasswords.new ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {showPasswords.new ? (
+                        <EyeOff className="profile-password-icon" />
+                      ) : (
+                        <Eye className="profile-password-icon" />
+                      )}
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
+                  <p className="profile-form-helper">Minimum 6 characters</p>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="profile-form-group">
+                  <label className="profile-form-label">
                     Confirm New Password
                   </label>
-                  <div className="relative">
+                  <div className="profile-password-input-container">
                     <input
-                      type={showPasswords.confirm ? 'text' : 'password'}
+                      type={showPasswords.confirm ? "text" : "password"}
                       value={passwordData.confirmPassword}
-                      onChange={(e) => handlePasswordInputChange('confirmPassword', e.target.value)}
-                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) =>
+                        handlePasswordInputChange(
+                          "confirmPassword",
+                          e.target.value
+                        )
+                      }
+                      className="profile-form-input profile-password-input"
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => togglePasswordVisibility('confirm')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      onClick={() => togglePasswordVisibility("confirm")}
+                      className="profile-password-toggle"
                     >
-                      {showPasswords.confirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {showPasswords.confirm ? (
+                        <EyeOff className="profile-password-icon" />
+                      ) : (
+                        <Eye className="profile-password-icon" />
+                      )}
                     </button>
                   </div>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="profile-form-actions">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="profile-form-submit"
                   >
-                    <Lock size={20} className="mr-2" />
-                    {loading ? 'Changing Password...' : 'Change Password'}
+                    <Lock className="profile-form-submit-icon" />
+                    <span>
+                      {loading ? "Changing Password..." : "Change Password"}
+                    </span>
                   </button>
                 </div>
               </form>

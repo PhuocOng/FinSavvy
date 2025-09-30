@@ -1,8 +1,9 @@
-import React from 'react';
-import DatePicker from 'react-datepicker';
-import { FaArrowLeft } from 'react-icons/fa';
-import 'react-datepicker/dist/react-datepicker.css';
-import './AddExpense.css';
+import React from "react";
+import DatePicker from "react-datepicker";
+import { FaArrowLeft } from "react-icons/fa";
+import "react-datepicker/dist/react-datepicker.css";
+import "./AddExpense.css";
+import { CornerDownLeft } from "lucide-react";
 
 const ExpenseForm = ({
   name,
@@ -13,14 +14,14 @@ const ExpenseForm = ({
   setDate,
   categoryOptions,
   onNext,
-  onBack
+  onBack,
 }) => {
   return (
     <div className="expense-form-container">
       {/* Header */}
       <div className="expense-form-header">
         <button onClick={onBack} className="back-button">
-          <FaArrowLeft />
+          <CornerDownLeft />
         </button>
         <h2 className="expense-form-title">Add Expense</h2>
       </div>
@@ -48,10 +49,7 @@ const ExpenseForm = ({
             onChange={(d) => setDate(d)}
             dateFormat="yyyy-MM-dd"
             customInput={
-              <button
-                type="button"
-                className="expense-form-date-button"
-              >
+              <button type="button" className="expense-form-date-button">
                 {date.toISOString().slice(0, 10)}
               </button>
             }
@@ -82,7 +80,9 @@ const ExpenseForm = ({
         type="button"
         onClick={onNext}
         disabled={!name || !date}
-        className={`expense-form-review-button ${name && date ? 'enabled' : 'disabled'}`}
+        className={`expense-form-review-button mb-20 ${
+          name && date ? "enabled" : "disabled"
+        }`}
       >
         Review
       </button>

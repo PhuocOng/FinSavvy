@@ -1,41 +1,61 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { usePlaidLink } from 'react-plaid-link';
-import { Calendar, Filter, TrendingUp, DollarSign, CreditCard, ShoppingCart } from 'lucide-react';
-import axios from 'axios';
-import TransactionTable from '../../components/Dashboard/TransactionTable';
-import PieChart from '../../components/Dashboard/PieChart';
-import BarChart from '../../components/Dashboard/BarChart';
-import FilterByDate from '../../components/Dashboard/FilterByDate';
-import FilterByCategory from '../../components/Dashboard/FilterByCategory';
-import './Dashboard.css';
-import ChatBot from '../ChatBot/ChatBot';
-import AddExpenseForm from '../../components/AddExpense/AddExpenseForm';
-import { useSearchParams } from 'react-router-dom';
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
+import { usePlaidLink } from "react-plaid-link";
+import {
+  Calendar,
+  Filter,
+  TrendingUp,
+  DollarSign,
+  CreditCard,
+  ShoppingCart,
+} from "lucide-react";
+import axios from "axios";
+import TransactionTable from "../../components/Dashboard/TransactionTable";
+import PieChart from "../../components/Dashboard/PieChart";
+import BarChart from "../../components/Dashboard/BarChart";
+import FilterByDate from "../../components/Dashboard/FilterByDate";
+import FilterByCategory from "../../components/Dashboard/FilterByCategory";
+import "./Dashboard.css";
+import ChatBot from "../ChatBot/ChatBot";
+import AddExpenseForm from "../../components/AddExpense/AddExpenseForm";
+import { useSearchParams } from "react-router-dom";
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [dateFilter, setDateFilter] = useState({ from: '', to: ''});
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState({ from: "", to: "" });
   const [showAddForm, setShowAddForm] = useState(false);
   const [isBankLinked, setIsBankLinked] = useState(false);
   const [linkToken, setLinkToken] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const action = searchParams.get('action'); // "add" or "connect"
+  const action = searchParams.get("action"); // "add" or "connect"
   const actionHandledRef = useRef(false);
 
+  const backendApiUrl = import.meta.env.VITE_BACKEND_URL;
+
   const fetchTransactions = useCallback(() => {
-    axios.get('/api/transactions', { withCredentials: true })
-      .then(res => {
-        const txns = Array.isArray(res?.data?.transactions) ? res.data.transactions : [];
+    axios
+      .get(`${backendApiUrl}/api/transactions`, { withCredentials: true })
+      .then((res) => {
+        const txns = Array.isArray(res?.data?.transactions)
+          ? res.data.transactions
+          : [];
         setTransactions(txns);
-        
-        const categories = Array.from(new Set(txns.map(txn => txn.category))).sort();
+
+        const categories = Array.from(
+          new Set(txns.map((txn) => txn.category))
+        ).sort();
         setCategoryOptions(categories);
       })
-      .catch(err => console.error('Error fetching transactions:', err));
-  }, []);
+      .catch((err) => console.error("Error fetching transactions:", err));
+  }, [backendApiUrl]);
 
   useEffect(() => {
     fetchTransactions();
@@ -44,12 +64,15 @@ const Dashboard = () => {
   useEffect(() => {
     let result = [...transactions];
     if (categoryFilter) {
-      result = result.filter(txn => txn.category === categoryFilter);
+      result = result.filter((txn) => txn.category === categoryFilter);
     }
     if (dateFilter.from && dateFilter.to) {
-      result = result.filter(txn => {
+      result = result.filter((txn) => {
         const txnDate = new Date(txn.date);
-        return txnDate >= new Date(dateFilter.from) && txnDate <= new Date(dateFilter.to);
+        return (
+          txnDate >= new Date(dateFilter.from) &&
+          txnDate <= new Date(dateFilter.to)
+        );
       });
     }
     setFilteredTransactions(result);
@@ -57,35 +80,46 @@ const Dashboard = () => {
 
   const generateToken = useCallback(async () => {
     try {
-      const authToken = localStorage.getItem('token');
-      const response = await axios.post('/api/plaid/create_link_token', {}, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
+      const authToken = localStorage.getItem("token");
+      const response = await axios.post(
+        `${backendApiUrl}/api/plaid/create_link_token`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
       setLinkToken(response.data.link_token);
     } catch (error) {
-      console.error('Failed to create link token', error);
+      console.error("Failed to create link token", error);
     }
-  }, []);
+  }, [backendApiUrl]);
 
   useEffect(() => {
     generateToken();
   }, [generateToken]);
 
   const onSuccess = useCallback(async (public_token) => {
-    const authToken = localStorage.getItem('token');
+    const authToken = localStorage.getItem("token");
     try {
-      await axios.post('/api/plaid/exchange_public_token', { public_token }, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
+      await axios.post(
+        `${backendApiUrl}/api/plaid/exchange_public_token`,
+        { public_token },
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
 
       alert("Bank account linked! Syncing transactions now...");
-      await axios.post('/api/plaid/sync-transactions', {}, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
+      await axios.post(
+        `${backendApiUrl}/api/plaid/sync-transactions`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
       alert("Sync complete!");
 
-      setIsBankLinked(prev => !prev);
-      
+      setIsBankLinked((prev) => !prev);
     } catch (error) {
       console.error("Failed to exchange token or sync transactions:", error);
       alert("Could not complete the bank linking process.");
@@ -96,32 +130,32 @@ const Dashboard = () => {
     token: linkToken,
     onSuccess,
   });
-    // Trigger deep-linked actions: ?action=add or ?action=connect
+  // Trigger deep-linked actions: ?action=add or ?action=connect
   // Trigger deep-linked actions: ?action=add or ?action=connect
   useEffect(() => {
     if (actionHandledRef.current) return;
     if (!action) return;
 
-    if (action === 'add') {
+    if (action === "add") {
       setShowAddForm(true);
       actionHandledRef.current = true;
-      setSearchParams(prev => {
+      setSearchParams((prev) => {
         const p = new URLSearchParams(prev);
-        p.delete('action');
+        p.delete("action");
         return p;
       });
       return;
     }
 
-    if (action === 'connect') {
+    if (action === "connect") {
       // wait until we actually have a token and Plaid is ready
       const tryOpen = () => {
         if (linkToken && ready) {
           open();
           actionHandledRef.current = true;
-          setSearchParams(prev => {
+          setSearchParams((prev) => {
             const p = new URLSearchParams(prev);
-            p.delete('action');
+            p.delete("action");
             return p;
           });
         }
@@ -132,69 +166,92 @@ const Dashboard = () => {
     }
   }, [action, linkToken, ready, open, setSearchParams]);
 
-
-  const totalIncome = useMemo(() => filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
-  const totalExpenses = useMemo(() => filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0), [filteredTransactions]);
-  const netAmount = totalIncome - totalExpenses;
+  // const totalIncome = useMemo(
+  //   () =>
+  //     filteredTransactions
+  //       .filter((t) => t.type === "income")
+  //       .reduce((sum, t) => sum + t.amount, 0),
+  //   [filteredTransactions]
+  // );
+  // const totalExpenses = useMemo(
+  //   () =>
+  //     filteredTransactions
+  //       .filter((t) => t.type === "expense")
+  //       .reduce((sum, t) => sum + t.amount, 0),
+  //   [filteredTransactions]
+  // );
+  // const netAmount = totalIncome - totalExpenses;
 
   const handleAddManualExpense = (newExpense) => {
-    setTransactions(prev => [...prev, newExpense]);
+    setTransactions((prev) => [...prev, newExpense]);
   };
 
   const handleDeleteTransaction = (id) => {
-    axios.delete(`/api/transactions/${id}`, { withCredentials: true })
+    axios
+      .delete(`/api/transactions/${id}`, { withCredentials: true })
       .then(() => {
-        const updatedTransactions = transactions.filter(t => t._id !== id);
+        const updatedTransactions = transactions.filter((t) => t._id !== id);
         setTransactions(updatedTransactions);
       })
-      .catch(err => {
-        console.error('Error deleting transaction:', err);
+      .catch((err) => {
+        console.error("Error deleting transaction:", err);
       });
   };
 
   const clearFilters = () => {
-    setDateFilter({ from: '', to: '' });
-    setCategoryFilter('');
+    setDateFilter({ from: "", to: "" });
+    setCategoryFilter("");
   };
 
   return (
-    <div className="dashboard-container dark:bg-gray-900">
+    <div className="dashboard-container">
       <div className="dashboard-content">
         <div className="dashboard-header">
-          {/* Add dark classes to titles */}
-          <h1 className="dashboard-title dark:text-blue-300">Transaction Dashboard</h1>
-          <p className="dashboard-subtitle dark:text-blue-400">Visualize your spendings and stay on top of your finances</p>
+          <div className="dashboard-title-container">
+            <div className="dashboard-title-icon">
+              <TrendingUp className="dashboard-title-icon-svg" />
+            </div>
+            <div className="dashboard-title-content">
+              <h1 className="dashboard-title">Transaction Dashboard</h1>
+              <p className="dashboard-subtitle">
+                <DollarSign className="dashboard-subtitle-icon" />
+                Visualize your spendings and stay on top of your finances
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="filters-grid-horizontal dark:bg-gray-800">
-          <FilterByDate 
-            dateFilter={dateFilter}
-            setDateFilter={setDateFilter} 
-          />
+        <div className="filters-grid-horizontal">
+          <FilterByDate dateFilter={dateFilter} setDateFilter={setDateFilter} />
           <FilterByCategory
             categoryFilter={categoryFilter}
-            setCategoryFilter={setCategoryFilter} 
+            setCategoryFilter={setCategoryFilter}
             categories={categoryOptions}
           />
-          {/* Add dark classes to buttons */}
-          <button onClick={clearFilters} className="clear-filters-btn dark:bg-gray-700 dark:text-blue-300 dark:hover:bg-gray-600">
+          <button onClick={clearFilters} className="clear-filters-btn">
             Clear Filters
           </button>
-          <button onClick={() => setShowAddForm(prev => !prev)} className="add-expense-btn dark:bg-gray-700 dark:text-blue-300 dark:hover:bg-gray-600">
+          <button
+            onClick={() => setShowAddForm((prev) => !prev)}
+            className="add-expense-btn"
+          >
             Add Expense
           </button>
-          <button onClick={() => open()} disabled={!ready} className="add-expense-btn dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500">
+          <button
+            onClick={() => open()}
+            disabled={!ready}
+            className="link-bank-btn"
+          >
             Link Bank Account
           </button>
         </div>
 
         <div className="charts-grid">
-          {/* The charts might need specific props or configuration for dark mode themes */}
           <PieChart data={filteredTransactions} />
           <BarChart data={filteredTransactions} />
         </div>
 
-        <TransactionTable 
+        <TransactionTable
           transactions={filteredTransactions}
           onDelete={handleDeleteTransaction}
         />
@@ -204,10 +261,9 @@ const Dashboard = () => {
         {showAddForm && (
           <>
             <div className="overlay" onClick={() => setShowAddForm(false)} />
-            {/* Add dark classes to the slide-in panel */}
-            <div className="add-expense-panel show dark:bg-gray-800">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Add Expense</h2>
+            <div className="add-expense-panel show">
+              <div className="modal-header">
+                <h2>Add Expense</h2>
               </div>
               <div className="add-expense-form">
                 <AddExpenseForm
@@ -222,7 +278,6 @@ const Dashboard = () => {
             </div>
           </>
         )}
-
       </div>
     </div>
   );
