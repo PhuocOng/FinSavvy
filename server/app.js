@@ -15,7 +15,13 @@ const app = express();
 // Create a router for the API
 const apiRouter = express.Router();
 
-const allowedOrigins = ['http://localhost:3000', 'https://fin-savvy-frontend.vercel.app', 'https://finsavvy.online'];
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'https://fin-savvy-frontend.vercel.app', 
+  'https://finsavvy.online',
+  'http://pomentorship.com',
+  'https://pomentorship.com'
+];
 
 // Middleware
 app.use(express.json());
@@ -51,7 +57,12 @@ apiRouter.use('/analytics', analyticsRouter);
 apiRouter.use('/transactions', transactionRoutes);
 apiRouter.use('/gpt/advice', gptadviceRoutes);
 
+// Thêm route cho path không có trailing slash
+apiRouter.get('/', (req, res) => {
+  res.json({ status: 'OK', message: 'FinSavvy API is running!' });
+});
+
 // Mount with global prefix
-app.use('/finsavvy/api/', apiRouter);
+app.use('/finsavvy/api', apiRouter);
 
 module.exports = app;
