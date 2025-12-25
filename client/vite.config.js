@@ -17,4 +17,5 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 1000, // 🔧 increase the limit (default is 500)
   },
+  base: '/finsavvy/',
 });
