@@ -19,8 +19,8 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'https://fin-savvy-frontend.vercel.app', 
   'https://finsavvy.online',
-  'http://pomentorship.com',
-  'https://pomentorship.com'
+  'http://pocommunity.com',
+  'https://pocommunity.com'
 ];
 
 // Middleware
